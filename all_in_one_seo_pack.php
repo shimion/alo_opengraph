@@ -40,12 +40,11 @@ if ( ! defined( 'AIOSEOP_PLUGIN_FILE' ) ) define( 'AIOSEOP_PLUGIN_FILE', __FILE_
  * @TODO: This might need more error handling for things like PHP safe_mode.
  */
 if ( @file_exists( plugin_dir_path( __FILE__ ) . '/pro' ) && @is_dir( plugin_dir_path( __FILE__ ) . '/pro' ) ) {
-	add_action( 'admin_init', 'disable_all_in_one_free', 1 );
-
 	if ( ! defined( 'AIOSEOPPRO' ) ) {
 		define( 'AIOSEOPPRO', true );
 	} else {
 		// Another copy of the plugin has already loaded.
+		add_action( 'admin_init', 'disable_all_in_one_free', 1 );
 		return;
 	}
 } else {
