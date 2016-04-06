@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if ( ! defined( 'ABSPATH' ) ) return;
 
-if ( ! defined( 'AIOSEOP_PLUGIN_FILE' ) ) define( 'AIOSEOP_PLUGIN_FILE', __FILE__ );
-
 /**
  * @TODO: This might need more error handling for things like PHP safe_mode.
  */
@@ -56,6 +54,8 @@ if ( @file_exists( plugin_dir_path( __FILE__ ) . '/pro' ) && @is_dir( plugin_dir
 	}
 }
 
+if ( ! defined( 'AIOSEOP_PLUGIN_FILE' ) ) define( 'AIOSEOP_PLUGIN_FILE', __FILE__ );
+
 if ( ! defined( 'AIOSEOP_PLUGIN_DIR' ) ) {
     define( 'AIOSEOP_PLUGIN_DIR', plugin_dir_path( AIOSEOP_PLUGIN_FILE ) );
 } elseif ( AIOSEOP_PLUGIN_DIR != plugin_dir_path( __FILE__ ) ) {
@@ -63,15 +63,32 @@ if ( ! defined( 'AIOSEOP_PLUGIN_DIR' ) ) {
 	return;
 }
 
-
+// Multiple active copies of the plugin should be resolved at this point.
 if ( ! defined( 'AIOSEOP_VERSION' ) ) define( 'AIOSEOP_VERSION', '2.3.3.2' );
 
 global $aioseop_plugin_name;
 $aioseop_plugin_name = 'All in One SEO Pack';
 
+if ( ! function_exists( 'disable_all_in_one_free' ) ) {
+	/**
+	 * Disable the free version of AIOSEOP if Free and Pro are both active
+	 */
+	function disable_all_in_one_free(){
+		if ( AIOSEOPPRO && is_plugin_active( 'all-in-one-seo-pack/all_in_one_seo_pack.php' ) ) {
+			deactivate_plugins( 'all-in-one-seo-pack/all_in_one_seo_pack.php' );
+		}
+	}
+}
+
+/**
+ * Main initialization code.
+ */
 require_once( AIOSEOP_PLUGIN_DIR . '/aioseop_init.php' );
 
 if ( AIOSEOPPRO ) {
+	/**
+	 * Pro-specific initialization code.
+	 */
 	require_once( AIOSEOP_PLUGIN_DIR . '/pro/aioseop_pro_init.php' );
 }
 

@@ -333,9 +333,3 @@ function aioseop_install(){
 }
 }
 
-if(!function_exists('disable_all_in_one_free')){
-function disable_all_in_one_free(){
-	if ( AIOSEOPPRO && is_plugin_active( 'all-in-one-seo-pack/all_in_one_seo_pack.php' )){
-		deactivate_plugins( 'all-in-one-seo-pack/all_in_one_seo_pack.php' );
-	}
-}}
