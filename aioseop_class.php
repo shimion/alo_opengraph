@@ -8,7 +8,7 @@
 require_once( AIOSEOP_PLUGIN_DIR . 'admin/aioseop_module_class.php' );
 /**
  * The main class.
- */
+ */ 
 class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 
 	/** The current version of the plugin. **/
