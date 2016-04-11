@@ -251,9 +251,9 @@ function aioseop_is_overflowed(element) {
 
 function aioseop_overflow_border( el ) {
 	if ( aioseop_is_overflowed(el) ) {
-		el.className = 'aioseop_option_div aioseop_overflowed';
+		el.className = 'aioseop-option-div aioseop_overflowed';
 	} else {
-		el.className = 'aioseop_option_div';
+		el.className = 'aioseop-option-div';
 	}
 }
 
@@ -286,13 +286,13 @@ jQuery(document).ready(function() {
 			}
 		});
 	}
-	jQuery(".all-in-one-seo_page_all-in-one-seo-pack-pro-aioseop_feature_manager #aiosp_settings_form .aioseop_settings_left").delegate("input[name='Submit']", "click", function(e) {
+	jQuery(".all-in-one-seo_page_all-in-one-seo-pack-pro-aioseop_feature_manager #aiosp-settings-form .aioseop-settings-left").delegate("input[name='Submit']", "click", function(e) {
 		e.preventDefault();
 		return false;
 	});
-	jQuery(".all-in-one-seo_page_all-in-one-seo-pack-pro-aioseop_feature_manager #aiosp_settings_form").delegate("input[name='Submit']", "click", function(e) {
+	jQuery(".all-in-one-seo_page_all-in-one-seo-pack-pro-aioseop_feature_manager #aiosp-settings-form").delegate("input[name='Submit']", "click", function(e) {
 		e.preventDefault();
-		aioseop_handle_post_url('aioseop_ajax_save_settings', 'ajax_settings_message', jQuery('form#aiosp_settings_form').serialize(),
+		aioseop_handle_post_url('aioseop_ajax_save_settings', 'ajax_settings_message', jQuery('form#aiosp-settings-form').serialize(),
 			function() {
 				jQuery('.wp-has-current-submenu').fadeIn('fast', function() {
 					aioseop_handle_ajax_call('aioseop_ajax_get_menu_links', 'ajax_settings_message', jQuery.param( {target: '.wp-has-current-submenu > ul'} ) );
@@ -300,7 +300,7 @@ jQuery(document).ready(function() {
 			} );
 		return false;
 	});
-	var selectors = "div.aioseop_multicheckbox_type div.aioseop_option_div, #aiosp_sitemap_debug div.aioseop_option_div, #aiosp_performance_status div.aioseop_option_div";
+	var selectors = "div.aioseop_multicheckbox_type div.aioseop-option-div, #aiosp_sitemap_debug div.aioseop-option-div, #aiosp_performance_status div.aioseop-option-div";
 	jQuery("div#aiosp_sitemap_addl_pages_metabox").delegate("input[name='Submit']", "click", function() {
 		aioseop_handle_post_url('aioseop_ajax_save_url', 'sitemap_addl_pages', jQuery('div#aiosp_sitemap_addl_pages_metabox input, div#aiosp_sitemap_addl_pages_metabox select').serialize() );
 		return false;
