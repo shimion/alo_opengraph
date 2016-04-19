@@ -222,7 +222,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 						$page_text .= "<li><strong>$name</strong> $value</li>";
 						$mail_text .= "$name: $value\r\n";
 					} else {
-						$page_text .= "</ul><h2>$name</h2><ul class='sfwd_debug_settings'>";
+						$page_text .= "</ul><h2>$name</h2><ul class='sfwd-debug-settings'>";
 						$mail_text .= "\r\n$name\r\n----------\r\n";
 					}
 				}
@@ -252,7 +252,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 				}
 			} while(0); // control structure for use with break
 			$nonce = wp_create_nonce('sfwd-debug-nonce');
-			$buf =	"<ul class='sfwd_debug_settings'>\n{$page_text}\n</ul>\n<p>\n" .
+			$buf =	"<ul class='sfwd-debug-settings'>\n{$page_text}\n</ul>\n<p>\n" .
 					'<input name="sfwd_debug_send_email" type="text" value="" placeholder="' . __( "E-mail debug information", 'all-in-one-seo-pack' ) . '"><input name="sfwd_debug_nonce" type="hidden" value="' .
 					$nonce . '"><input name="sfwd_debug_submit" type="submit" value="' . __( 'Submit', 'all-in-one-seo-pack' ) . '" class="button-primary">';
 					

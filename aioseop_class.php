@@ -1213,7 +1213,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 												 'pointer_align' => 'left',
 												 'pointer_scope' => 'global'
 											);
-		$this->pointers['aioseop_welcome_230'] = Array( 'pointer_target' => '#aioseop_top_button',
+		$this->pointers['aioseop_welcome_230'] = Array( 'pointer_target' => '#aioseop-top-button',
 													'pointer_text' => '<h3>' . sprintf( __( 'Review Your Settings', 'all-in-one-seo-pack' ), AIOSEOP_VERSION )
 													. '</h3><p>' . __( 'New in 2.4: Improved support for taxonomies, Woocommerce and massive performance improvements under the hood! Please review your settings on each options page!', 'all-in-one-seo-pack' ) . '</p>',
 													 'pointer_edge' => 'bottom',
@@ -1230,7 +1230,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 													 'pointer_align' => 'left',
 													 'pointer_scope' => 'global'
 												);
-			$this->pointers['aioseop_welcome_220'] = Array( 'pointer_target' => '#aioseop_top_button',
+			$this->pointers['aioseop_welcome_220'] = Array( 'pointer_target' => '#aioseop-top-button',
 														'pointer_text' => '<h3>' . sprintf( __( 'Review Your Settings', 'all-in-one-seo-pack' ), AIOSEOP_VERSION )
 														. '</h3><p>' . __( 'Thank you for running the latest and greatest All in One SEO Pack ever! New since 2.2: Control who accesses your site with the new Robots.txt Editor and File Editor modules!  Enable them from the Feature Manager.  Remember to review your settings, we have added some new ones!', 'all-in-one-seo-pack' ) . '</p>',
 														 'pointer_edge' => 'bottom',
@@ -3497,7 +3497,7 @@ EOF;
 						if ( $title != $this->plugin_name ) $title = $this->plugin_name . ' - ' . $title;
 						if ( $tab_num <= 1 ) {
 							if ( !empty( $m[0]['callback_args']['help_link'] ) )
-								$title .= "<a class='aioseop_help_text_link aioseop_meta_box_help' target='_blank' href='" . $m[0]['callback_args']['help_link'] . "'><span>" . __( 'Help', 'all-in-one-seo-pack' ) . "</span></a>";
+								$title .= "<a class='aioseop-help-text-link aioseop_meta_box_help' target='_blank' href='" . $m[0]['callback_args']['help_link'] . "'><span>" . __( 'Help', 'all-in-one-seo-pack' ) . "</span></a>";
 							add_meta_box( $m[0]['id'], $title, $m[0]['callback'], $m[0]['post_type'], $m[0]['context'], $m[0]['priority'], $m[0]['callback_args'] );
 						} elseif ( $tab_num > 1 ) {
 							add_meta_box( $m[0]['id'] . '_tabbed', $title, Array( $this, 'display_tabbed_metabox' ), $m[0]['post_type'], $m[0]['context'], $m[0]['priority'], $m );
@@ -3509,7 +3509,7 @@ EOF;
 					$title = $m['title'];
 					if ( $title != $this->plugin_name ) $title = $this->plugin_name . ' - ' . $title;
 					if ( !empty( $m['help_link'] ) )
-						$title .= "<a class='aioseop_help_text_link aioseop_meta_box_help' target='_blank' href='" . $m['help_link'] . "'><span>" . __( 'Help', 'all-in-one-seo-pack' ) . "</span></a>";
+						$title .= "<a class='aioseop-help-text-link aioseop_meta_box_help' target='_blank' href='" . $m['help_link'] . "'><span>" . __( 'Help', 'all-in-one-seo-pack' ) . "</span></a>";
 					add_meta_box( $m['id'], $title, $m['callback'], $m['post_type'], $m['context'], $m['priority'], $m['callback_args'] );
 				}
 			}
@@ -3559,19 +3559,19 @@ EOF;
 			aioseop_output_dismissable_notice( $msg, "", "error" );
 		}
 ?>
-		<div class="aioseop_top">
-			<div class="aioseop_top_sidebar aioseop_options_wrapper">
+		<div class="aioseop-top">
+			<div class="aioseop-top-idebar aioseop-options-wrapper">
 				<?php do_meta_boxes( 'aioseop_metaboxes', 'normal', Array( 'test' ) ); ?>
 			</div>
 		</div>
-		<style>
-			#wpbody-content {
+		<style> 
+/*			#wpbody-content {
 				min-width: 900px;
-			}
+			}*/
 		</style>
-		<div class="aioseop_right_sidebar aioseop_options_wrapper">
+		<div class="aioseop-right-sidebar aioseop-options-wrapper">
 
-		<div class="aioseop_sidebar">
+		<div class="aioseop-sidebar">
 			<?php
 			do_meta_boxes( 'aioseop_metaboxes', 'side', Array( 'test' ) );
 			?>
@@ -3587,15 +3587,17 @@ EOF;
 				//]]>
 			</script>
 		<?php if ( !AIOSEOPPRO ) { ?>
-			<div class="aioseop_advert aioseop_nopad_all">
+			<div class="aioseop-advert aioseop-nopad-all">
+                            <h3 id="colapse-div-btn-adv">Collapse And expand Advertise section</h3>
+                             <div class="collapse-expand-div">
 					<?php $adid = mt_rand( 21, 23 );
 
-					if($adid == 23){ ?><div style="height: 220px; background-image: url('https://www.wincher.com/Content/Images/plugin/wp/banner30.jpg')">
-						<form  style="position: relative; top: 170px; left: 40px;" action="https://www.wincher.com/FastReg" method="post" target="_blank">
+                                        if($adid == 23){ ?><div class="banner-3rd-section">
+                                            <form class="banner-3rd-section-form" action="https://www.wincher.com/FastReg" method="post" target="_blank">
 							<input type="hidden" name="adreferer" value="banner<?php echo $adid; ?>"/>
 							<input type="hidden" name="referer" value="all-in-one-seo-pack"/>
-							<input type="text" name="email" placeholder="Email" style="padding-left: 7px; height: 30px; width: 290px; border: solid 1px #DDD;"/>
-							<input type="submit" name="sub"  value="Sign up!" style="height: 30px; width: 90px; background-color: #42DA76; color: #FFF; font-weight: bold; border:none; margin-left:5px;"/>
+                                                        <input type="text" name="email" placeholder="Email" class="email"/>
+                                                        <input type="submit" name="sub"  value="Sign up!" class="sign-up-button"/>
 							</form></div>
 							<?
 						}else{
@@ -3604,14 +3606,18 @@ EOF;
 							</div></a>
 							<?php } ?>
 							</div>
+                                         </div>
 							<!-- Headway Themes-->
-								<div class="aioseop_advert headwaythemes">
+								<div class="aioseop-advert headwaythemes">
 								<div>
-								<h3>Drag and Drop WordPress Design</h3>
-								<p><a href="http://semperfiwebdesign.com/headwayaio/" target="_blank">Headway Themes</a> allows you to easily create your own stunning website designs! Stop using premade themes start making your own design with Headway's easy to use Drag and Drop interface. All in One SEO Pack users have an exclusive discount by using coupon code <strong>SEMPERFI30</strong> at checkout.</p>
-								</div>
-								<a href="http://semperfiwebdesign.com/headwayaio/" target="_blank"><img src="<?php echo AIOSEOP_PLUGIN_IMAGES_URL; ?>headwaybanner.png"></a>
-								</div>
+								  <h3 id="colapse-div-btn">Drag and Drop WordPress Design</h3>
+                                                                    <div class="collapse-expand-div">
+                                                                        <p>
+                                                                          <a href="http://semperfiwebdesign.com/headwayaio/" target="_blank">Headway Themes</a> allows you to easily create your own stunning website designs! Stop using premade themes start making your own design with Headway's easy to use Drag and Drop interface. All in One SEO Pack users have an exclusive discount by using coupon code <strong>SEMPERFI30</strong> at checkout.
+                                                                        </p>
+                                                                          <a href="http://semperfiwebdesign.com/headwayaio/" target="_blank"><img src="<?php echo AIOSEOP_PLUGIN_IMAGES_URL; ?>headwaybanner.png"></a>
+                                                                    </div>
+                                                                </div>
 								<?php } ?>
 								</div>
 								</div>

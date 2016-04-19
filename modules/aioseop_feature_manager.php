@@ -68,7 +68,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Feature_Manager' ) ) {
 				$this->default_options["enable_$m"] = Array( 'name'		 => $this->module_info[$m]['name'],
 				 											 'help_text' => $this->module_info[$m]['description'],
 				 											 'type'		 => 'custom',
-															 'class'	 => 'aioseop_feature',
+															 'class'	 => 'aioseop-feature',
 															 'id'		 => "aioseop_$m",
 															 'save'		 => true );
 
@@ -108,18 +108,18 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Feature_Manager' ) ) {
 		function display_option_div( $buf, $args ) {
 			$name = $img = $desc = $checkbox = $class = '';
 			if ( isset( $args['options']['help_text'] ) && !empty( $args['options']['help_text'] ) )
-				$desc .= '<p class="aioseop_desc">' . $args['options']['help_text'] . '</p>';
+				$desc .= '<p class="aioseop-desc">' . $args['options']['help_text'] . '</p>';
 			if ($args['value']) $class = ' active';
 			if ( isset( $args['options']['image'] ) && !empty( $args['options']['image'] ) )
 				$img .= '<p><img src="' . AIOSEOP_PLUGIN_IMAGES_URL . $args['options']['image'] . '"></p>';
 			else
-				$img .= '<p><span class="aioseop_featured_image' . $class . '"></span></p>';
+				$img .= '<p><span class="aioseop-featured-image' . $class . '"></span></p>';
 
 			if ( $args['options']['save'] ) {
 				$name = "<h3>{$args['options']['name']}</h3>";
-				$checkbox .= '<input type="checkbox" onchange="jQuery(\'#' . $args["options"]["id"] . ' .aioseop_featured_image, #' . $args["options"]["id"] . ' .feature_button\').toggleClass(\'active\', this.checked);jQuery(\'input[name=Submit]\').trigger(\'click\');" style="display:none;" id="' . $args['name'] . '" name="' . $args['name'] . '"';
+				$checkbox .= '<input type="checkbox" onchange="jQuery(\'#' . $args["options"]["id"] . ' .aioseop-featured-image, #' . $args["options"]["id"] . ' .feature-button\').toggleClass(\'active\', this.checked);jQuery(\'input[name=Submit]\').trigger(\'click\');" style="display:none;" id="' . $args['name'] . '" name="' . $args['name'] . '"';
 				if ($args['value']) $checkbox .= " CHECKED";
-				$checkbox .= '><span class="button-primary feature_button' . $class . '"></span>';
+				$checkbox .= '><span class="button-primary feature-button' . $class . '"></span>';
 			} else {
 				$name = "<b>{$args['options']['name']}</b>";
 			}
