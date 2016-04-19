@@ -1,21 +1,27 @@
 <?php
 /**
- * @package All-in-One-SEO-Pack
- */
-
-/**
- * AIOSEOP Updates class. 
- *
- * Handle detection of new plugin version updates, migration of old settings,
+ * AIOSEOP_Updates class, handles updates for upgrades of the plugin or WordPress Core
+ * 
+ * Handles detection of new plugin version updates, migration of old settings,
  * new WP core feature support, etc.
+ * 
+ * @package All-in-One-SEO-Pack
+ * @since 2.3.3
  */
-class aioseop_updates {
+class AIOSEOP_Updates {
 	/**
-	 * Constructor
+	 * Constructor, handles any instance creation-time tasks
 	 */
 	function __construct() {
 	}
 
+	/**
+	 * Checks to see if we need to handle updates for plugin or core upgrades.
+	 * 
+	 * @access public
+	 * @global class $aiosp           Main AIOSEOP class instance
+	 * @global array $aioseop_options AIOSEOP options
+	 */
 	function version_updates() {
 		global $aiosp, $aioseop_options;
 		if ( empty( $aioseop_options ) ) {
@@ -26,7 +32,7 @@ class aioseop_updates {
 			}
 		}
 
-		// Last known running plugin version
+		/** @var bool Last known running plugin version, or default to '0.0' */
 		$last_active_version = isset( $aioseop_options['last_active_version'] ) ? $aioseop_options['last_active_version'] : '0.0';
 
 		// See if we are running a newer version than last time we checked.
@@ -43,14 +49,19 @@ class aioseop_updates {
 			}
 		}
 
-		/**
+		/*
 		 * Perform updates that are dependent on external factors, not 
 		 * just the plugin version.
 		 */
 		$this->do_feature_updates();
-
 	}
 
+	/**
+	 * Performs updates based on AIOSEOP plugin version changes
+	 * 
+	 * @global $aioseop_options 
+	 * @param string $old_version Previous AIOSEOP plugin version
+	 */
 	function do_version_updates( $old_version ) {
 		global $aioseop_options;
 
@@ -71,6 +82,11 @@ class aioseop_updates {
 		*/
 	}
 
+	/**
+	 * Performs updates that depend on system features, not AIOSEOP version.
+	 * 
+	 * @global $aioseop_options
+	 */
 	function do_feature_updates() {
 		global $aioseop_options;
 
@@ -98,6 +114,10 @@ class aioseop_updates {
 	/**
 	 * Remove overzealous 'DOC' entry which is causing false-positive bad 
 	 * bot blocking.
+	 * 
+	 * @global $aiosp
+	 * @global @aioseop_options
+	 * @since 2.3.3
 	 */
 	function bad_bots_201603() {
 		global $aiosp, $aioseop_options;
