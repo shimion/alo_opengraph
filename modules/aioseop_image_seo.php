@@ -9,11 +9,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 	class All_in_One_SEO_Pack_Image_Seo extends All_in_One_SEO_Pack_Module {
 		function __construct( ) {
 			if ( get_class( $this ) === 'All_in_One_SEO_Pack_Image_Seo' ) {
-				// Set this up only when instantiated as this class !
+				// Set this up only when instantiated as this class.
 				$this->name = __( 'Image SEO', 'all-in-one-seo-pack' );
-				// Human-readable name of the plugin!
+				// Human-readable name of the plugin.
 				$this->prefix = 'aiosp_image_seo_';
-				// Option prefix !
+				// Option prefix.
 				$this->file = __FILE__;
 			}
 			$this->help_text = array(
@@ -37,7 +37,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 							'sanitize' => 'text',
 						)
 						);
-			// load initial options / set defaults
+			// Load initial options / set defaults.
 			$this->update_options( );
 
 			$display = array();
@@ -60,7 +60,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						'name' => __( 'General Settings', 'all-in-one-seo-pack' ),
 						'help_link' => 'http://semperplugins.com/documentation/general-settings/',
 						'options' => array(),
-						// This is set below, to the remaining options -- pdb!
+						// This is set below, to the remaining options -- pdb.
 					),
 				'home'  => array(
 						'name' => __( 'Home Page Settings', 'all-in-one-seo-pack' ),
