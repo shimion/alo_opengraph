@@ -776,19 +776,177 @@ if ( !function_exists( 'parse_ini_string' ) ) {
 }
 
 function aioseop_update_user_visibilitynotice(){
-
 	update_user_meta( get_current_user_id(), 'aioseop_visibility_notice_dismissed', true );
-
-	}
+}
 
 function aioseop_update_yst_detected_notice(){
-
 	update_user_meta( get_current_user_id(), 'aioseop_yst_detected_notice_dismissed', true );
-
-	}
+}
 
 function aioseop_woo_upgrade_notice_dismissed(){
-
 	update_user_meta( get_current_user_id(), 'aioseop_woo_upgrade_notice_dismissed', true );
+}
 
-	}
+/**
+ * Displays notification on /edit.php for all post_type
+ *
+ * The function outputs a notification to logged in admin users when there is any post on the page 
+ * with custom title (_$_aioseop_title) and description ($_aioseop_description) values above the 
+ * recommended limit. Shows currently for all posts, filter by post_status: https://codex.wordpress.org/Post_Status
+ *
+ * @since 2.3.4
+ *
+ * @see aisop_post_id_long_title_description()
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @global WP    $wp            WP instance.
+ *
+ */
+if ( !function_exists( 'aioseop_posts_list_length_notification' ) ) {
+    function aioseop_posts_list_length_notification(){
+        Global $current_screen;
+        if('edit' != $current_screen->base){
+            return;
+        }
+        /* return if the user has already clicked "click here" */
+        if(!empty($_GET['post_seo']) && 'bad' == $_GET['post_seo']){
+            return;
+        }
+        global $wpdb;
+        /* setting up defaults */
+        $max_title_count           = '60';
+        $max_description_count     = '160';
+        $thatorthem                = 'that';
+        $title_count_present       = 0;
+        $description_count_present = 0;
+        $title_count               = '0';
+        $description_count         = '0';
+        $_aioseop_title            = array();
+        $_aioseop_description      = array();
+        /* get the post_id list of items having title and description higher than max count */
+        /* generating a merged list to get combined list of ids */
+        $merged_bad_post_ids       = aisop_post_id_long_title_description()[0];
+        /* counting number of items with title issue */
+        $title_count               = aisop_post_id_long_title_description()[1];
+        /* counting number of items with description issue */
+        $description_count         = aisop_post_id_long_title_description()[3];
+        $_aioseop_title            = aisop_post_id_long_title_description()[2];
+        $_aioseop_description      = aisop_post_id_long_title_description()[4];
+        /* generating error notice */
+        $error_notice              = '';
+        if( 'none' != $title_count &&  0 < $title_count){
+            $title_count_present   = 1;
+            $error_notice         .= $title_count.' SEO title';
+            /* changing SEO title to SEO titles if $title_count is greater than 1 */
+            if( 1 < $title_count ) {
+                $error_notice     .= 's';
+                $thatorthem        = 'them';
+            }
+        }
+        if( 'none' != $description_count &&  0 < $description_count){
+            $description_count_present = 1;
+            /* adding "and" between title and description count if title errors exist */
+            if( 1 == $title_count_present ){
+                $error_notice .= ' and ';
+            }
+            $error_notice .= $description_count.' SEO description';
+            /* changing SEO description to SEO descriptions if $title_count is greater than 1 */
+            if( 1 < $description_count ) {
+                $error_notice .= 's';
+                $thatorthem = 'them';
+            }
+        }
+        /* check if both title and description error exist, then it should be them automatically */
+        if( 1 == $title_count_present && 1 == $description_count_present ){
+            $thatorthem = 'them';
+        }
+        if( 1 == $title_count_present || 1 == $description_count_present ){
+            /* generate link to add */
+            global $wp;
+            $post_seo_bad_url = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
+            $post_seo_bad_url = add_query_arg( 'post_seo', 'bad', $post_seo_bad_url );
+            $error_notice = '<b>Warning: You have '.$error_notice.' that exceed the recommended character count. <a href="'.$post_seo_bad_url.'">Click here</a> to view '.$thatorthem.'.</b>';
+            ?>
+            <div class="error notice">
+                <p><?php _e( $error_notice, 'all-in-one-seo-pack' ); ?></p>
+            </div>
+            <?php
+        }
+    }
+    add_action( 'admin_notices', 'aioseop_posts_list_length_notification', 10, 1 );
+    
+    /* function to filter posts as per the bad title and description */
+    add_filter('posts_where', 'aioseop_post_seo_bad_where' );
+    function aioseop_post_seo_bad_where($where){
+        Global $current_screen;
+        if('edit' != $current_screen->base){
+            return $where;
+        }
+        if(empty($_GET['post_seo']) || 'bad' != $_GET['post_seo']){
+            return $where;
+        }
+        $merged_bad_post_ids = aisop_post_id_long_title_description()[0];
+        $merged_bad_post_ids_implode = implode(',',$merged_bad_post_ids);
+        $where .= "AND id IN ($merged_bad_post_ids_implode) ";
+        return $where;
+    }
+}
+
+/**
+ * Returns an array of post_id of items with title or description longer than recommended
+ *
+ * The function exhibits the code to generate the post_id array for the items having lengthy 
+ * titles or desciptions in All In One SEO Pack settings. Used by aioseop_posts_list_length_notification()
+ * It returns an array with merged ids, seperate ids for titles and descriptions and counts for both
+ *
+ * @since 2.3.4
+ *
+ * @see aioseop_posts_list_length_notification()
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @return an array: array(
+ *                          $merged_bad_post_ids, 
+ *                          $title_count, 
+ *                          $_aioseop_title, 
+ *                          $description_count,
+ *                          $_aioseop_description
+ *                   );
+ */
+function aisop_post_id_long_title_description($max_title_count=60,$max_description_count=160){
+    Global $wpdb;
+//        $max_title_count = '60';
+//        $max_description_count = '160';
+    $postmetatable       = $wpdb->prefix . "postmeta";
+    $poststable          = $wpdb->prefix . "posts";
+    $screen              = get_current_screen();
+    $bad_post_ids        = $wpdb->get_results(
+                                "
+                                SELECT $postmetatable.post_id, $postmetatable.meta_key 
+                                FROM `$postmetatable` 
+                                LEFT JOIN `$poststable`
+                                ON $postmetatable.post_id=id 
+                                WHERE (
+                                (meta_key='_aioseop_title' AND CHAR_LENGTH(meta_value) > $max_title_count) 
+                                OR 
+                                (meta_key='_aioseop_description' AND CHAR_LENGTH(meta_value) > $max_description_count)
+                                ) 
+                                AND post_type='$screen->post_type'
+                                "
+                            );
+    foreach ( $bad_post_ids as $bad_post_id ) 
+    {
+        /* dynamically generating variable name - array for title & description to store post_id in each 
+           it can generate: 
+                $_aioseop_title
+                $_aioseop_description
+         */
+        ${$bad_post_id->meta_key}[$bad_post_id->post_id] = $bad_post_id->post_id;
+    }
+    /* counting number of items with title issue */
+    $title_count         = count($_aioseop_title);
+    /* counting number of items with description issue */
+    $description_count   = count($_aioseop_description);
+    /* generating a merged list to get combined list of ids */
+    $merged_bad_post_ids =    array_unique(array_merge($_aioseop_title,$_aioseop_description)); 
+    return array($merged_bad_post_ids, $title_count, $_aioseop_title, $description_count, $_aioseop_description);
+}
