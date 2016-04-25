@@ -498,6 +498,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
+
+		/**
+		 * Checks if the boot is a black list.
+		 * @since 1.0.0
+		 * @return array $botlist.
+		 */
 		function default_bad_bots() {
 			$botlist = Array(
 				"Abonti",
@@ -644,19 +650,30 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 
+		/**
+		 * Checks if it is bad bot.
+		 * @since 1.0.0
+		 * @return boolean.
+		 */
 		function is_bad_bot() {
 			$botlist = $this->default_bad_bots();
 			$botlist = apply_filters( $this->prefix . "badbotlist", $botlist );
-			if ( !empty( $botlist ) ) {
-			    $ua = $_SERVER['HTTP_USER_AGENT'];
+			if ( !empty( $botlist ) )	{
+				$ua = $_SERVER['HTTP_USER_AGENT'];
 				$uas = $this->quote_list_for_regex( $botlist );
-			    if ( preg_match( '/' . $uas . '/i', $ua ) ) {
+				if ( preg_match( '/' . $uas . '/i', $ua ) )	{
 					return true;
 				}
 			}
 			return false;
 		}
 
+
+		/**
+		 * Checks for bad refererer.
+		 * @since 1.0.0
+		 * @return array $referlist.
+		 */
 		function default_bad_referers() {
 			$referlist = Array(
 				'semalt.com',
@@ -688,49 +705,81 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $referlist;
 		}
 
+		/**
+		 * Checks for if it bad refererer.
+		 * @since 1.0.0
+		 * @return boolean.
+		 */
 		function is_bad_referer() {
 			$referlist = $this->default_bad_referers();
 			$referlist = apply_filters( $this->prefix . "badreferlist", $referlist );
-
-			if ( !empty( $referlist ) && !empty( $_SERVER ) && !empty( $_SERVER['HTTP_REFERER'] ) ) {
-			    $ref = $_SERVER['HTTP_REFERER'];
+			if ( !empty( $referlist )
+				&& !empty( $_SERVER )
+				&& !empty( $_SERVER['HTTP_REFERER'] ) )	{
+				$ref = $_SERVER['HTTP_REFERER'];
 				$regex = $this->quote_list_for_regex( $referlist );
-			    if ( preg_match( '/' . $regex . '/i', $ref ) ) {
+				if ( preg_match( '/' . $regex . '/i', $ref ) )	{
 					return true;
 				}
 			}
 			return false;
 		}
 
+
+		/**
+		 * Allows or not a bot.
+		 * @since 1.0.0
+		 * @return array.
+		 */
 		function allow_bot() {
 			$allow_bot = true;
-			if ( ( !$this->is_good_bot() ) && ( $this->is_bad_bot() ) && !is_user_logged_in() )
+			if ( ( ! $this->is_good_bot() )
+				&& ( $this->is_bad_bot() )
+				&& ! is_user_logged_in() )
 				$allow_bot = false;
 			return apply_filters( $this->prefix . "allow_bot", $allow_bot );
 		}
 
 		/**
 		 * Displays tabs for tabbed locations on a settings page.
+		 * @since 1.0.0
+		 * @param String $location.
 		 */
 		function display_tabs( $location ) {
 			if ( ( $location != null ) && isset( $locations[$location]['tabs'] ) )
 				$tabs = $locations['location']['tabs'];
 			else
 				$tabs = $this->tabs;
-			if ( !empty( $tabs ) ) {
-					?><div class="aioseop_tabs_div"><label class="aioseop_head_nav">
-					<?php
-					foreach ( $tabs as $k => $v ) {
-					?>
-						<a class="aioseop_head_nav_tab aioseop_head_nav_<?php if ( $this->current_tab != $k ) echo "in"; ?>active" href="<?php echo esc_url( add_query_arg( 'tab', $k ) ); ?>"><?php echo $v['name']; ?></a>
-					<?php
-					}
-					?>
-					</label></div>
+			if ( !empty( $tabs ) )	{
+				?>
+					<div class="aioseop_tabs_div">
+						<label class="aioseop_head_nav">
+						<?php
+							foreach ( $tabs as $k => $v )
+							{
+						?>
+								<a
+									class="aioseop_head_nav_tab aioseop_head_nav_<?php if ( $this->current_tab != $k ) echo "in"; ?>active"
+									href="<?php echo esc_url( add_query_arg( 'tab', $k ) ); ?>"
+								>
+									<?php echo $v['name']; ?>
+								</a>
+						<?php
+							}
+						?>
+						</label>
+					</div>
 				<?php
 			}
 		}
 
+
+		/**
+		 * Gets objet labels.
+		 * @since 1.0.0
+		 * @param String $post_objs.
+		 * @return array $post_types.
+		 */
 		function get_object_labels( $post_objs ) {
 			$pt = array_keys( $post_objs );
 			$post_types = Array();
@@ -742,6 +791,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $post_types;
 		}
 
+		/**
+		 * Gets term labels.
+		 * @since 1.0.0
+		 * @param array $post_objs.
+		 * @return array $post_types.
+		 */
 		function get_term_labels( $post_objs ) {
 			$post_types = Array();
 			foreach ( $post_objs as $p )
@@ -750,49 +805,81 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $post_types;
 		}
 
+
+		/**
+		 * Gets term labels.
+		 * @since 1.0.0
+		 * @param array $args.
+		 * @return array get_object_labels.
+		 */
 		function get_post_type_titles( $args = Array() ) {
-			return $this->get_object_labels( get_post_types( $args, 'objects' ) );
+			return $this->get_object_labels(
+				get_post_types( $args, 'objects' )
+			);
 		}
 
+		/**
+		 * Gets taxonomy titles.
+		 * @since 1.0.0
+		 * @param array $args.
+		 * @return array get_object_labels.
+		 */
 		function get_taxonomy_titles( $args = Array() ) {
-			return $this->get_object_labels( get_taxonomies( $args, 'objects' ) );
+			return $this->get_object_labels(
+				get_taxonomies( $args, 'objects' )
+			);
 		}
 
+
+		/**
+		 * Gets category titles.
+		 * @since 1.0.0
+		 * @param array $args.
+		 * @return array get_term_labels.
+		 */
 		function get_category_titles( $args = Array() ) {
 			return $this->get_term_labels( get_categories( $args ) );
 		}
 
 		/**
-		 * Helper function for exporting settings on post data.
+		 * Helps functions for exporting settings on a post data.
+		 * @since 1.0.0
+		 * @param String $prefix, array $querry.
+		 * @return String $buf.
 		 */
 		function post_data_export( $prefix = '_aioseop', $query = Array( 'posts_per_page' => -1 ) ) {
 			$buf = '';
 			$posts_query = new WP_Query( $query );
-			while ($posts_query->have_posts() ) {
+			while ($posts_query->have_posts() )	{
 				$posts_query->the_post();
 				global $post;
-				$guid = $post->guid; $type = $post->post_type; $title = $post->post_title; $date = $post->post_date;
+				$guid = $post->guid;
+				$type = $post->post_type;
+				$title = $post->post_title;
+				$date = $post->post_date;
 				$data = '';
 				$post_custom_fields = get_post_custom( $post->ID );
 				$has_data = null;
-
-				if( is_array( $post_custom_fields ) ) {
-					foreach( $post_custom_fields as $field_name => $field ){
-						if( ( $this->strpos( $field_name, $prefix ) === 0 ) && ( $field[0] ) ) {
+				if( is_array( $post_custom_fields ) )	{
+					foreach( $post_custom_fields as $field_name => $field )
+					{
+						if( ( $this->strpos( $field_name, $prefix ) === 0 ) && ( $field[0] ) )
+						{
 							$has_data = true;
 							$data .= $field_name . " = '" . $field[0] . "'\n";
 						}
 					}
 				}
-				if ( !empty( $data ) ) $has_data = true;
-
-				if( $has_data != null ){
-					$post_info = "\n[post_data]\n\n";
+				if ( !empty( $data ) )
+					$has_data = true;
+				if( $has_data != null )	{
+					$post_info  = "\n[post_data]\n\n";
 					$post_info .= "post_title = '" . $title . "'\n";
 					$post_info .= "post_guid = '" . $guid . "'\n";
 					$post_info .= "post_date = '" . $date . "'\n";
 					$post_info .= "post_type = '" . $type . "'\n";
-					if ( $data ) $buf .= $post_info . $data . "\n";
+					if ( $data )
+						$buf .= $post_info . $data . "\n";
 				}
 			}
 			wp_reset_postdata();
@@ -801,6 +888,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Handles exporting settings data for a module.
+		 * @since 1.0.0
+		 * @param String $buf.
+		 * @return String $buf.
 		 */
 		function settings_export( $buf ) {
 			global $aiosp;
@@ -810,30 +900,45 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$exporter_choices = '';
 			if ( !empty( $_REQUEST[ 'aiosp_importer_exporter_export_choices' ] ) )
 				$exporter_choices = $_REQUEST[ 'aiosp_importer_exporter_export_choices' ];
-			if ( !empty( $exporter_choices ) && is_array( $exporter_choices ) ) {
-				foreach( $exporter_choices as $ex ) {
-					if ( $ex == 1 ) $general_settings = true;
-					if ( $ex == 2 ) {
+
+			if ( !empty( $exporter_choices ) && is_array( $exporter_choices ) )	{
+				foreach( $exporter_choices as $ex )	{
+					if ( $ex == 1 )
+						$general_settings = true;
+					if ( $ex == 2 )
+					{
 						if ( isset( $_REQUEST[ 'aiosp_importer_exporter_export_post_types' ] ) )
 							$post_types = $_REQUEST[ 'aiosp_importer_exporter_export_post_types' ];
 					}
 				}
 			}
-
 			if ( ( $post_types != null ) && ( $this === $aiosp ) )
-				$buf .= $this->post_data_export( '_aioseop', Array( 'posts_per_page' => -1, 'post_type' => $post_types ) );
-
-			/* Add all active settings to settings file */
+				$buf .= $this->post_data_export(
+					'_aioseop',
+					Array(
+						'posts_per_page' 	=> -1,
+						'post_type' 		=> $post_types
+						)
+					);
 			$name = $this->get_option_name();
 			$options = $this->get_class_option();
-			if( !empty( $options ) && $general_settings != null ) {
+			if( !empty( $options ) && $general_settings != null )	{
 				$buf .= "\n[$name]\n\n";
-				foreach ( $options as $key => $value ) {
-					if ( ( $name == $this->parent_option ) && ( $key == 'modules' ) ) continue; // don't re-export all module settings -- pdb
-					if ( is_array($value) )
-						$value = "'" . str_replace( Array( "'", "\n", "\r" ), Array( "\'", '\n', '\r' ), trim( serialize( $value ) ) ) . "'";
+				foreach ( $options as $key => $value )	{
+					if ( ( $name == $this->parent_option ) && ( $key == 'modules' ) )
+						continue;
+					if ( is_array( $value ) )
+						$value = "'" . str_replace(
+							Array( "'", "\n", "\r" ),
+							Array( "\'", '\n', '\r' ),
+							trim( serialize( $value ) )
+						) . "'";
 					else
-						$value = str_replace( Array( "\n", "\r" ), Array( '\n', '\r' ), trim( var_export($value, true) ) );
+						$value = str_replace(
+							Array( "\n", "\r" ),
+							Array( '\n', '\r' ),
+							trim( var_export($value, true) )
+						);
 					$buf .= "$key = $value\n";
 				}
 			}
@@ -841,38 +946,57 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * Order for adding the menus for the aioseop_modules_add_menus hook.
+		 * Adds the menus for the aioseop_modules_add_menus hook.
+		 * @since 1.0.0
+		 * @return int.
 		 */
 		function menu_order() {
 			return 10;
 		}
 
 		/**
-		 * Print a basic error message.
+		 * Prints a basic error message.
+		 * @since 1.0.0
+		 * @param String $error.
+		 * @return boolean.
 		 */
 		function output_error( $error ) {
-			echo "<div class='aioseop_module error'>$error</div>";
+			echo 	"<div class='aioseop_module error'>
+						$error
+					</div>";
 			return FALSE;
 		}
 
-		/***
-		 * Backwards compatibility - see http://php.net/manual/en/function.str-getcsv.php
+		/**
+		 * Backwards compatibility.
+		 * @since 1.0.0
+		 * @see http://php.net/manual/en/function.str-getcsv.php
+		 * @param String $input, String $delimiter, String $enclosure, String $escape.
+		 * @return array $data.
 		 */
 		function str_getcsv( $input, $delimiter = ",", $enclosure = '"', $escape = "\\" ) {
 			$fp = fopen( "php://memory", 'r+' );
 			fputs( $fp, $input );
 			rewind( $fp );
-			$data = fgetcsv( $fp, null, $delimiter, $enclosure ); // $escape only got added in 5.3.0
+			$data = fgetcsv(
+				$fp,
+				null,
+				$delimiter,
+				$enclosure
+			); // $escape only got added in 5.3.0.
 			fclose( $fp );
 			return $data;
 		}
 
-		/***
-		 * Helper function to convert csv in key/value pair format to an associative array.
+		/**
+		 *  Helps functions converting csv in key/value pair format to an associative array.
+		 * @since 1.0.0
+		 * @param String $csv.
+		 * @return array $args.
 		 */
 		function csv_to_array( $csv ) {
 			$args = Array();
-			if ( !function_exists( 'str_getcsv' ) )
+			if ( ! function_exists( 'str_getcsv' ) )
 				$v = $this->str_getcsv( $csv );
 			else
 				$v = str_getcsv( $csv );
@@ -883,12 +1007,23 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $args;
 		}
 
-		/** Allow modules to use WP Filesystem if available and desired, fall back to PHP filesystem access otherwise. */
+		/**
+		 * Allows modules to use WP Filesystem if available and desired, fall back to PHP filesystem access otherwise.
+		 * @since 1.0.0
+		 * @param String $method, Boolean $form_fields, String $url, Boolean $error.
+		 * @return array $credentials.
+		 */
 		function use_wp_filesystem( $method = '', $form_fields = false, $url = '', $error = false ) {
 			if ( empty( $method ) )
 				$this->credentials = request_filesystem_credentials( $url );
 			else
-				$this->credentials = request_filesystem_credentials( $url, $method, $error, false, $form_fields );
+				$this->credentials = request_filesystem_credentials(
+					$url,
+					$method,
+					$error,
+					false,
+					$form_fields
+				);
 			return $this->credentials;
 		}
 
