@@ -498,7 +498,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
-
 		/**
 		 * Checks if the boot is a black list.
 		 * @since 1.0.0
@@ -649,7 +648,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $botlist;
 		}
 
-
 		/**
 		 * Checks if it is bad bot.
 		 * @since 1.0.0
@@ -667,7 +665,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 			return false;
 		}
-
 
 		/**
 		 * Checks for bad refererer.
@@ -725,7 +722,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * Allows or not a bot.
 		 * @since 1.0.0
@@ -773,7 +769,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
-
 		/**
 		 * Gets objet labels.
 		 * @since 1.0.0
@@ -805,7 +800,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $post_types;
 		}
 
-
 		/**
 		 * Gets term labels.
 		 * @since 1.0.0
@@ -829,7 +823,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				get_taxonomies( $args, 'objects' )
 			);
 		}
-
 
 		/**
 		 * Gets category titles.
@@ -900,7 +893,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$exporter_choices = '';
 			if ( !empty( $_REQUEST[ 'aiosp_importer_exporter_export_choices' ] ) )
 				$exporter_choices = $_REQUEST[ 'aiosp_importer_exporter_export_choices' ];
-
 			if ( !empty( $exporter_choices ) && is_array( $exporter_choices ) )	{
 				foreach( $exporter_choices as $ex )	{
 					if ( $ex == 1 )
