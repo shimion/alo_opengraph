@@ -497,7 +497,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				return false;
 			}
 		}
-		
+
 		function default_bad_bots() {
 			$botlist = Array(
 				"Abonti",
@@ -642,6 +642,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			);
 			return $botlist;
 		}
+
 
 		function is_bad_bot() {
 			$botlist = $this->default_bad_bots();
