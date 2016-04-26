@@ -1020,23 +1020,23 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * Wrapper function to get filesystem object.
+		 * Wrapps function to get filesystem object.
+		 * @since 1.0.0
+		 * @return array $wp_filesystem, boolean.
 		 */
-		function get_filesystem_object( ) {
+		function get_filesystem_object() {
 			$cred = get_transient( 'aioseop_fs_credentials' );
-			if ( !empty( $cred ) ) $this->credentials = $cred;
-
-			if ( function_exists( 'WP_Filesystem' ) && ( WP_Filesystem( $this->credentials ) ) ) {
+			if ( !empty( $cred ) )
+				$this->credentials = $cred;
+			if ( function_exists( 'WP_Filesystem' ) && ( WP_Filesystem( $this->credentials ) ) )	{
 				global $wp_filesystem;
 				return $wp_filesystem;
 			} else {
 				require_once( ABSPATH . 'wp-admin/includes/template.php' );
 				require_once( ABSPATH . 'wp-admin/includes/screen.php' );
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
-
-				if ( !WP_Filesystem( $this->credentials ) )
+				if ( ! WP_Filesystem( $this->credentials ) )
 					$this->use_wp_filesystem();
-
 				if ( !empty( $this->credentials ) )
 					set_transient( 'aioseop_fs_credentials', $this->credentials, 10800 );
 				global $wp_filesystem;
@@ -1047,7 +1047,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * See if a file exists using WP Filesystem.
+		 * Sees if a file exists using WP Filesystem.
+		 * @since 1.0.0
+		 * @param String $filename.
+		 * @return String $wpfs.
 		 */
 		function file_exists( $filename ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1057,7 +1060,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * See if the directory entry is a file using WP Filesystem.
+		 * Sees if the directory entry is a file using WP Filesystem..
+		 * @since 1.0.0
+		 * @param String $filename.
+		 * @return String $wpfs.
 		 */
 		function is_file( $filename ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1067,30 +1073,41 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * List files in a directory using WP Filesystem.
+		 * Lists files in a directory using WP Filesystem.
+		 * @since 1.0.0
+		 * @param String $path.
+		 * @return String $wpfs, String $dirlist.
 		 */
 		function scandir( $path ) {
 			$wpfs = $this->get_filesystem_object();
-			if ( is_object( $wpfs ) ) {
+			if ( is_object( $wpfs ) )	{
 				$dirlist = $wpfs->dirlist( $path );
-				if ( empty( $dirlist ) ) return $dirlist;
+				if ( empty( $dirlist ) )
+					return $dirlist;
 				return array_keys( $dirlist );
 			}
 			return $wpfs;
 		}
 
 		/**
-		 * Load a file through WP Filesystem; implement basic support for offset and maxlen.
+		 * Loads a file through WP Filesystem and implements basic support for offset and maxlen.
+		 * @since 1.0.0
+		 * @param String $filename, Boolean $use_include_path, String $context, int $offset, int $maxlen.
+		 * @return Boolean, String, String substr(), String $wpfs.
 		 */
 		function load_file( $filename, $use_include_path = false, $context = null, $offset = -1, $maxlen = -1 ) {
 			$wpfs = $this->get_filesystem_object();
-			if ( is_object( $wpfs ) ) {
-				if ( !$wpfs->exists( $filename ) ) return false;
-				if ( ( $offset > 0 ) || ( $maxlen >= 0 ) ) {
-					if ( $maxlen === 0 ) return '';
-					if ( $offset < 0 ) $offset = 0;
+			if ( is_object( $wpfs ) )	{
+				if ( ! $wpfs->exists( $filename ) )
+					return false;
+				if ( ( $offset > 0 ) || ( $maxlen >= 0 ) )	{
+					if ( $maxlen === 0 )
+						return '';
+					if ( $offset < 0 )
+						$offset = 0;
 					$file = $wpfs->get_contents( $filename );
-					if ( !is_string( $file ) || empty( $file ) ) return $file;
+					if ( ! is_string( $file ) || empty( $file ) )
+						return $file;
 					if ( $maxlen < 0 )
 						return $this->substr( $file, $offset );
 					else
@@ -1103,81 +1120,129 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * Save a file through WP Filesystem.
+		 * Saves a file through WP Filesystem.
+		 * @since 1.0.0
+		 * @param String $filename, String $contents.
+		 * @return Boolean, String, String output_error().
 		 */
 		function save_file( $filename, $contents ) {
-			$failed_str = __( sprintf( "Failed to write file %s!\n", $filename ), 'all-in-one-seo-pack' );
-			$readonly_str = __( sprintf( "File %s isn't writable!\n", $filename ), 'all-in-one-seo-pack' );
+			$failed_str = __(
+				sprintf( "Failed to write file %s!\n", $filename ),
+				'all-in-one-seo-pack'
+			);
+			$readonly_str = __(
+				sprintf( "File %s isn't writable!\n", $filename ),
+				'all-in-one-seo-pack'
+			);
 			$wpfs = $this->get_filesystem_object();
-			if ( is_object( $wpfs ) ) {
+			if ( is_object( $wpfs ) )	{
 				$file_exists = $wpfs->exists( $filename );
-				if ( !$file_exists || $wpfs->is_writable( $filename ) ) {
-					if ( $wpfs->put_contents( $filename, $contents ) === FALSE) return $this->output_error( $failed_str );
-				} else return $this->output_error( $readonly_str );
+				if ( ! $file_exists || $wpfs->is_writable( $filename ) )	{
+					if ( $wpfs->put_contents( $filename, $contents ) === FALSE)
+						return $this->output_error( $failed_str );
+				} else
+					return $this->output_error( $readonly_str );
 				return true;
 			}
 			return false;
 		}
 
 		/**
-		 * Delete a file through WP Filesystem.
+		 * Deletes a file through WP Filesystem.
+		 * @since 1.0.0
+		 * @param String $filename.
+		 * @return Boolean.
 		 */
 		function delete_file( $filename ) {
 			$wpfs = $this->get_filesystem_object();
-			if ( is_object( $wpfs ) ) {
-				if ( $wpfs->exists( $filename ) ) {
+			if ( is_object( $wpfs ) )	{
+				if ( $wpfs->exists( $filename ) )	{
 					if ( $wpfs->delete( $filename ) === FALSE)
-						$this->output_error( __( sprintf( "Failed to delete file %s!\n", $filename ), 'all-in-one-seo-pack' ) );
+						$this->output_error(
+							__(
+								sprintf( "Failed to delete file %s!\n", $filename ),
+								'all-in-one-seo-pack'
+								)
+							);
 					else
 						return true;
-				} else $this->output_error( __( sprintf( "File %s doesn't exist!\n", $filename ), 'all-in-one-seo-pack' ) );
+				} else
+					$this->output_error(
+						__(
+							sprintf( "File %s doesn't exist!\n", $filename ),
+							'all-in-one-seo-pack'
+							)
+						);
 			}
 			return false;
 		}
 
 		/**
-		 * Rename a file through WP Filesystem.
+		 * Renames a file through WP Filesystem.
+		 * @since 1.0.0
+		 * @param String $filename, String $newname.
+		 * @return Boolean.
 		 */
 		function rename_file( $filename, $newname ) {
 			$wpfs = $this->get_filesystem_object();
-			if ( is_object( $wpfs ) ) {
+			if ( is_object( $wpfs ) )	{
 				$file_exists = $wpfs->exists( $filename );
 				$newfile_exists = $wpfs->exists( $newname );
-				if ( $file_exists && !$newfile_exists ) {
+				if ( $file_exists && ! $newfile_exists )	{
 					if ( $wpfs->move( $filename, $newname ) === FALSE)
-						$this->output_error( __( sprintf( "Failed to rename file %s!\n", $filename ), 'all-in-one-seo-pack' ) );
+						$this->output_error(
+							__(
+								sprintf( "Failed to rename file %s!\n", $filename ),
+								'all-in-one-seo-pack'
+								)
+							);
 					else
 						return true;
 				} else {
-					if ( !$file_exists )
-						$this->output_error( __( sprintf( "File %s doesn't exist!\n", $filename ), 'all-in-one-seo-pack' ) );
+					if ( ! $file_exists )
+						$this->output_error(
+							__(
+								sprintf( "File %s doesn't exist!\n", $filename ),
+								'all-in-one-seo-pack' )
+							);
 					elseif ( $newfile_exists )
-						$this->output_error( __( sprintf( "File %s already exists!\n", $newname ), 'all-in-one-seo-pack' ) );
+						$this->output_error(
+							__(
+								sprintf( "File %s already exists!\n", $newname ),
+								'all-in-one-seo-pack'
+								)
+							);
 				}
 			}
 			return false;
 		}
 
 		/**
-		 * Load multiple files.
+		 * Loads multiple files.
+		 * @since 1.0.0
+		 * @param String $filename, String $newname.
+		 * @return array $options.
 		 */
 		function load_files( $options, $opts, $prefix ) {
-			foreach ( $opts as $opt => $file ) {
+			foreach ( $opts as $opt => $file )	{
 				$opt = $prefix . $opt;
 				$file = ABSPATH . $file;
 				$contents = $this->load_file( $file );
-				if ( $contents !== false ) $options[$opt] = $contents;
+				if ( $contents !== false )
+					$options[$opt] = $contents;
 			}
 			return $options;
 		}
 
 		/**
-		 * Save multiple files.
+		 * Saves multiple files.
+		 * @since 1.0.0
+		 * @param array $opts, String $prefix.
 		 */
 		function save_files( $opts, $prefix ) {
-			foreach ( $opts as $opt => $file ) {
+			foreach ( $opts as $opt => $file )	{
 				$opt = $prefix . $opt;
-				if ( isset($_POST[$opt] ) ) {
+				if ( isset($_POST[$opt] ) )	{
 					$output = stripslashes_deep( $_POST[$opt] );
 					$file = ABSPATH . $file;
 					$this->save_file( $file, $output );
@@ -1186,72 +1251,95 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/**
-		 * Delete multiple files.
+		 * Deletes multiple files.
+		 * @since 1.0.0
+		 * @param array $opts.
 		 */
 		function delete_files( $opts ) {
-			foreach ( $opts as $opt => $file ) {
+			foreach ( $opts as $opt => $file )	{
 				$file = ABSPATH . $file;
 				$this->delete_file( $file );
 			}
 		}
 
+		/**
+		 * Gets all iamges by their type.
+		 * @since 1.0.0
+		 * @param String $options, String $p.
+		 * @return array.
+		 */
 		function get_all_images_by_type( $options = null, $p = null ) {
 			$img = Array();
-			if ( empty( $img ) ) {
+			if ( empty( $img ) )	{
 				$size = apply_filters( 'post_thumbnail_size', 'large' );
-
 				global $aioseop_options, $wp_query, $aioseop_opengraph;
-
-				if ( $p === null ) {
+				if ( $p === null )	{
 					global $post;
 				} else {
 					$post = $p;
 				}
-
 				$count = 1;
-
-				if ( !empty( $post ) ) {
-					if ( !is_object( $post ) ) $post = get_post( $post );
-					if ( is_object( $post ) && function_exists('get_post_thumbnail_id' ) ) {
+				if ( !empty( $post ) )	{
+					if ( !is_object( $post ) )
+						$post = get_post( $post );
+					if ( is_object( $post ) && function_exists('get_post_thumbnail_id' ) )
+					{
 						if ( $post->post_type == 'attachment' )
 							$post_thumbnail_id = $post->ID;
 						else
 							$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
-						if ( !empty( $post_thumbnail_id ) )	{
+						if ( !empty( $post_thumbnail_id ) )
+						{
 							$image = wp_get_attachment_image_src( $post_thumbnail_id, $size );
-							if ( is_array( $image ) ) {
+							if ( is_array( $image ) )
+							{
 								$img[] = Array( 'type' => 'featured', 'id' => $post_thumbnail_id, 'link' => $image[0] );
 							}
 						}
 					}
-
 					$post_id = $post->ID;
 					$p = $post; $w = $wp_query;
-
 					$meta_key = '';
-					if ( is_array( $options ) ) {
-						if ( isset( $options['meta_key'] ) ) {
+					if ( is_array( $options ) )
+					{
+						if ( isset( $options['meta_key'] ) )
+						{
 							$meta_key = $options['meta_key'];
 						}
 					}
-
-					if ( !empty( $meta_key ) && !empty( $post ) ) {
+					if ( !empty( $meta_key ) && !empty( $post ) )
+					{
 						$meta_key = explode( ',', $meta_key );
-						$image = $this->get_the_image_by_meta_key( Array( 'post_id' => $post->ID, 'meta_key' => $meta_key ) );
-						if ( !empty( $image ) ) {
-							$img[] = Array( 'type' => 'meta_key', 'id' => $meta_key, 'link' => $image );
+						$image = $this->get_the_image_by_meta_key(
+							Array(
+								'post_id' 	=> 	$post->ID,
+								'meta_key' 	=> 	$meta_key
+								)
+							);
+						if ( !empty( $image ) )
+						{
+							$img[] = Array(
+								'type' 	=> 	'meta_key',
+								'id' 	=> 	$meta_key,
+								'link' 	=> 	$image
+							);
 						}
 					}
-
 					if (! $post->post_modified_gmt != '' )
-						$wp_query = new WP_Query( array( 'p' => $post_id, 'post_type' => $post->post_type ) );
+						$wp_query = new WP_Query(
+							array(
+								'p' 		=> 	$post_id,
+								'post_type' => 	$post->post_type
+							)
+						);
 					if ( $post->post_type == 'page' )
 						$wp_query->is_page = true;
 					elseif ( $post->post_type == 'attachment' )
 						$wp_query->is_attachment = true;
 					else
 						$wp_query->is_single = true;
-					if 	( get_option( 'show_on_front' ) == 'page' ) {
+					if 	( get_option( 'show_on_front' ) == 'page' )
+					{
 						if ( $post->ID == get_option( 'page_for_posts' ) )
 							$wp_query->is_home = true;
 					}
@@ -1259,25 +1347,42 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					$args['options']['nowrap'] = false;
 					$args['options']['save'] = false;
 					$wp_query->queried_object = $post;
-
-					$attachments = get_children( Array( 'post_parent' 		=> $post->ID,
-														'post_status' 		=> 'inherit',
-														'post_type' 		=> 'attachment',
-														'post_mime_type'	=> 'image',
-														'order' 			=> 'ASC',
-														'orderby' 			=> 'menu_order ID' ) );
+					$attachments = get_children( Array(
+						'post_parent' 		=> $post->ID,
+						'post_status' 		=> 'inherit',
+						'post_type' 		=> 'attachment',
+						'post_mime_type'	=> 'image',
+						'order' 			=> 'ASC',
+						'orderby' 			=> 'menu_order ID'
+						)
+					);
 					if ( !empty( $attachments ) )
-						foreach( $attachments as $id => $attachment ) {
+						foreach( $attachments as $id => $attachment )
+						{
 							$image = wp_get_attachment_image_src( $id, $size );
-							if ( is_array( $image ) ) {
-								$img[] = Array( 'type' => 'attachment', 'id' => $id, 'link' => $image[0] );
+							if ( is_array( $image ) )
+							{
+								$img[] = Array(
+									'type' 	=> 'attachment',
+									'id' 	=> $id,
+									'link' 	=> $image[0]
+								);
 							}
 						}
 					$matches = Array();
-					preg_match_all( '|<img.*?src=[\'"](.*?)[\'"].*?>|i', get_post_field( 'post_content', $post->ID ), $matches );
+					preg_match_all(
+						'|<img.*?src=[\'"](.*?)[\'"].*?>|i',
+						get_post_field( 'post_content', $post->ID ),
+						$matches
+					);
 					if ( isset( $matches ) && !empty( $matches[1] ) && !empty( $matches[1][0] ) )
-						foreach( $matches[1] as $i => $m ) {
-							$img[] = Array( 'type' => 'post_content', 'id' => 'post' . $count++, 'link' => $m );
+						foreach( $matches[1] as $i => $m )
+						{
+							$img[] = Array(
+								'type' 	=> 'post_content',
+								'id' 	=> 'post' . $count++,
+								'link' 	=> $m
+							);
 						}
 					wp_reset_postdata();
 					$wp_query = $w; $post = $p;
@@ -1286,11 +1391,17 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $img;
 		}
 
+		/**
+		 * Gets all iamges.
+		 * @since 1.0.0
+		 * @param String $options, String $p.
+		 * @return array.
+		 */
 		function get_all_images( $options = null, $p = null ) {
 			$img = $this->get_all_images_by_type( $options, $p );
 			$legacy = Array();
-			foreach( $img as $k => $v ) {
-				if ( $v['type'] == 'featured' ) {
+			foreach( $img as $k => $v )	{
+				if ( $v['type'] == 'featured' )	{
 					$legacy[$v['link']] = 1;
 				} else {
 					$legacy[$v['link']] = $v['id'];
@@ -1299,71 +1410,95 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $legacy;
 		}
 
-		/*** Thanks to Justin Tadlock for the original get-the-image code - http://themehybrid.com/plugins/get-the-image ***/
-
+		/**
+		 * Gets the image code.
+		 *
+		 * Thanks to Justin Tadlock for the original get-the-image code.
+		 * @since 1.0.0
+		 * @author Justin Tadlock
+		 * @link http://themehybrid.com/plugins/get-the-image
+		 * @param String $options, String $p.
+		 * @return array.
+		 */
 		function get_the_image( $options = null, $p = null ) {
 
-			if ( $p === null ) {
+			if ( $p === null )	{
 				global $post;
 			} else {
 				$post = $p;
 			}
-
 			$meta_key = '';
-			if ( is_array( $options ) ) {
-				if ( isset( $options['meta_key'] ) ) {
+			if ( is_array( $options ) )	{
+				if ( isset( $options['meta_key'] ) )	{
 					$meta_key = $options['meta_key'];
 				}
 			}
-
-			if ( !empty( $meta_key ) && !empty( $post ) ) {
+			if ( !empty( $meta_key ) && !empty( $post ) )	{
 				$meta_key = explode( ',', $meta_key );
-				$image = $this->get_the_image_by_meta_key( Array( 'post_id' => $post->ID, 'meta_key' => $meta_key ) );
+				$image = $this->get_the_image_by_meta_key(
+					Array(
+						'post_id' 	=> $post->ID,
+						'meta_key' 	=> $meta_key
+						)
+					);
 			}
-			if ( empty( $image ) ) $image = $this->get_the_image_by_post_thumbnail( $post );
-			if ( empty( $image ) ) $image = $this->get_the_image_by_attachment( $post );
-			if ( empty( $image ) ) $image = $this->get_the_image_by_scan( $post );
-			if ( empty( $image ) ) $image = $this->get_the_image_by_default( $post );
+			if ( empty( $image ) )
+				$image = $this->get_the_image_by_post_thumbnail( $post );
+			if ( empty( $image ) )
+				$image = $this->get_the_image_by_attachment( $post );
+			if ( empty( $image ) )
+				$image = $this->get_the_image_by_scan( $post );
+			if ( empty( $image ) )
+				$image = $this->get_the_image_by_default( $post );
 			return $image;
 		}
 
+		/**
+		 * Gets the image by default.
+		 * @since 1.0.0
+		 * @param String $p.
+		 * @return String.
+		 */
 		function get_the_image_by_default( $p = null ) {
 			return '';
 		}
 
+		/**
+		 * Gets the image by meta key.
+		 * @since 1.0.0
+		 * @param array $args.
+		 * @return Mixed.
+		 */
 		function get_the_image_by_meta_key( $args = array() ) {
-
-			/* If $meta_key is not an array. */
-			if ( !is_array( $args['meta_key'] ) )
+			if ( ! is_array( $args['meta_key'] ) )
 				$args['meta_key'] = array( $args['meta_key'] );
-
-			/* Loop through each of the given meta keys. */
-			foreach ( $args['meta_key'] as $meta_key ) {
-				/* Get the image URL by the current meta key in the loop. */
+			foreach ( $args['meta_key'] as $meta_key )	{
 				$image = get_post_meta( $args['post_id'], $meta_key, true );
-				/* If a custom key value has been given for one of the keys, return the image URL. */
 				if ( !empty( $image ) )
 					return $image;
 			}
 			return false;
 		}
 
+		/**
+		 * Gets the image by post thumbnail.
+		 * @since 1.0.0
+		 * @param String $p.
+		 * @return array.
+		 */
 		function get_the_image_by_post_thumbnail( $p = null ) {
-
-			if ( $p === null ) {
+			if ( $p === null )	{
 				global $post;
 			} else {
 				$post = $p;
 			}
-
 			$post_thumbnail_id = null;
-			if ( function_exists('get_post_thumbnail_id' ) ) {
+			if ( function_exists('get_post_thumbnail_id' ) )	{
 				$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
 			}
 
 			if ( empty( $post_thumbnail_id ) )
 				return false;
-
 			$size = apply_filters( 'post_thumbnail_size', 'large' );
 			$image = wp_get_attachment_image_src( $post_thumbnail_id, $size );
 				return $image[0];
