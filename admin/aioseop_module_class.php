@@ -2617,37 +2617,70 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				echo "</div>";
 		}
 
+		/**
+		 * Sanitizes the domain.
+		 * @since 1.0.0
+		 * @param String $domain.
+		 * @return String.
+		 */
 		function sanitize_domain( $domain ) {
 			$domain = trim( $domain );
 			$domain = $this->strtolower( $domain );
-			if ( $this->strpos( $domain, "http://" ) === 0 ) $domain = $this->substr( $domain, 7 );
-			elseif ( $this->strpos( $domain, "https://" ) === 0 ) $domain = $this->substr( $domain, 8 );
+			if ( $this->strpos( $domain, "http://" ) === 0 )
+				$domain = $this->substr( $domain, 7 );
+			elseif
+				( $this->strpos( $domain, "https://" ) === 0 )
+				$domain = $this->substr( $domain, 8 );
 			$domain = untrailingslashit( $domain );
 			return $domain;
 		}
 
-		/** Sanitize options */
+		/**
+		 * Sanitizes options.
+		 * @since 1.0.0
+		 * @param String $location.
+		 */
 		function sanitize_options( $location = null ) {
-			foreach ( $this->setting_options( $location ) as $k => $v ) {
-				if ( isset( $this->options[$k] ) ) {
+			foreach ( $this->setting_options( $location ) as $k => $v )	{
+				if ( isset( $this->options[$k] ) )	{
 					if ( !empty( $v['sanitize'] ) )
 						$type = $v['sanitize'];
 					else
 						$type = $v['type'];
-					switch ( $type ) {
+					switch ( $type )
+					{
 						case 'multiselect':
-						case 'multicheckbox': $this->options[$k] = urlencode_deep( $this->options[$k] );
-											  break;
-						case 'textarea':	  $this->options[$k] = wp_kses_post( $this->options[$k] );
-											  $this->options[$k] = htmlspecialchars( $this->options[$k], ENT_QUOTES );
-											  break;
-						case 'filename':	  $this->options[$k] = sanitize_file_name( $this->options[$k] );
-											  break;
-						case 'text':		  $this->options[$k] = wp_kses_post( $this->options[$k] );
+						case 'multicheckbox':
+							$this->options[$k] = urlencode_deep(
+								$this->options[$k]
+							);
+							break;
+						case 'textarea':
+							$this->options[$k] = wp_kses_post(
+								$this->options[$k]
+							);
+							$this->options[$k] = htmlspecialchars(
+								$this->options[$k],
+								ENT_QUOTES
+							);
+							break;
+						case 'filename':
+							$this->options[$k] = sanitize_file_name(
+								$this->options[$k]
+							);
+							break;
+						case 'text':
+							$this->options[$k] = wp_kses_post(
+							$this->options[$k]
+						);
 						case 'checkbox':
 						case 'radio':
 						case 'select':
-						default:			  if ( !is_array( $this->options[$k] ) ) $this->options[$k] = esc_attr( $this->options[$k] );
+						default:
+							if ( ! is_array( $this->options[$k] ) )
+								$this->options[$k] = esc_attr(
+									$this->options[$k]
+								);
 					}
 				}
 			}
@@ -2655,13 +2688,17 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Display metaboxes with display_options()
+		 * @since 1.0.0
+		 * @param String $post, array $metabox.
 		 */
 		function display_metabox( $post, $metabox ) {
 			$this->display_options( $metabox['args']['location'], $metabox );
 		}
 
 		/**
-		 * Handle resetting options to defaults.
+		 * Handles resetting options to defaults.
+		 * @since 1.0.0
+		 * @param String $location, boolean $delete.
 		 */
 		function reset_options( $location = null, $delete = false ) {
 			if ( $delete === true ) {
@@ -2675,14 +2712,29 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$this->update_class_option( $this->options );
 		}
 
-		/** handle option resetting and updating */
+		/**
+		 * Handles option resetting and updating.
+		 * @since 1.0.0
+		 * @param String $location.
+		 * @return String.
+		 */
 		function handle_settings_updates( $location = null ) {
 			$message = '';
-			if ( (isset($_POST['action']) && $_POST['action'] == 'aiosp_update_module' &&
-			     ( isset( $_POST['Submit_Default'] ) || isset( $_POST['Submit_All_Default'] ) || !empty( $_POST['Submit'] ) ) ) ) {
+			if ( (isset($_POST['action']) && $_POST['action'] == 'aiosp_update_module'
+				&& ( isset( $_POST['Submit_Default'] )
+				|| isset( $_POST['Submit_All_Default'] )
+				|| !empty( $_POST['Submit'] ) ) ) )	{
 				$nonce = $_POST['nonce-aioseop'];
-				if (!wp_verify_nonce($nonce, 'aioseop-nonce')) die ( __( 'Security Check - If you receive this in error, log out and back in to WordPress', 'all-in-one-seo-pack' ) );
-				if ( isset( $_POST['Submit_Default'] ) || isset( $_POST['Submit_All_Default'] ) ) {
+				if ( ! wp_verify_nonce( $nonce, 'aioseop-nonce' ) )
+					die (
+						__(
+							'Security Check - If you receive this in error,
+								log out and back in to WordPress',
+							'all-in-one-seo-pack'
+						)
+					);
+				if ( isset( $_POST['Submit_Default'] )
+					|| isset( $_POST['Submit_All_Default'] ) ) {
 					$message = __( "Options Reset.", 'all-in-one-seo-pack' );
 					if ( isset($_POST['Submit_All_Default']) ) {
 						$this->reset_options( $location, true );
@@ -2692,105 +2744,254 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					}
 				}
 				if ( !empty( $_POST['Submit'] ) ) {
-					$message = __("All in One SEO Options Updated.", 'all-in-one-seo-pack');
+					$message = __(
+						"All in One SEO Options Updated.",
+						'all-in-one-seo-pack'
+					);
 					$default_options = $this->default_options( $location );
-					foreach( $default_options as $k => $v ) {
+					foreach( $default_options as $k => $v )	{
 						if ( isset( $_POST[$k] ) )
 							$this->options[$k] = stripslashes_deep( $_POST[$k] );
 						else
 							$this->options[$k] = '';
 					}
 					$this->sanitize_options( $location );
-					$this->options = apply_filters( $this->prefix . 'update_options', $this->options, $location );
+					$this->options = apply_filters(
+						$this->prefix . 'update_options',
+						$this->options,
+						$location
+					);
 					$this->update_class_option( $this->options );
 					wp_cache_flush();
 				}
-				do_action( $this->prefix . 'settings_update', $this->options, $location );
+				do_action(
+					$this->prefix . 'settings_update',
+					$this->options,
+					$location
+				);
 			}
 			return $message;
 		}
 
-		/** Update / reset settings, printing options, sanitizing, posting back */
+		/**
+		 * Updates, reset settings, prints options, sanitizes and posts back.
+		 * @since 1.0.0
+		 * @param String $location.
+		 */
 		function display_settings_page( $location = null ) {
-				if ( $location != null ) $location_info = $this->locations[$location];
-				$name = null;
-				if ( ( $location ) && ( isset( $location_info['name'] ) ) ) $name = $location_info['name'];
-				if ( !$name ) $name = $this->name;
-				$message = $this->handle_settings_updates( $location );
-				$this->settings_page_init();
-	?>
-				<div class="wrap <?php echo get_class( $this ); ?>">
-					<div id="aioseop_settings_header">
-					<?php if ( !empty( $message ) ) echo "<div id=\"message\" class=\"updated fade\"><p>$message</p></div>"; ?>
-					<div id="icon-aioseop" class="icon32"><br></div><h2><?php echo $name; ?></h2>
-								<div id="dropmessage" class="updated" style="display:none;"></div>
+			if ( $location != null )
+				$location_info = $this->locations[$location];
+			$name = null;
+			if ( ( $location ) && ( isset( $location_info['name'] ) ) )
+				$name = $location_info['name'];
+			if ( ! $name )
+				$name = $this->name;
+			$message = $this->handle_settings_updates( $location );
+			$this->settings_page_init();
+			?>
+
+			<div class="wrap <?php echo get_class( $this ); ?>">
+				<div id="aioseop_settings_header">
+
+					<?php
+						if ( !empty( $message ) )
+							echo "<div id=\"message\" class=\"updated fade\">
+									<p>
+										$message
+									</p>
+								  </div>";
+					?>
+
+					<div id="icon-aioseop" class="icon32">
+						<br>
 					</div>
-<?php
+					<h2>
+
+						<?php echo $name; ?>
+
+					</h2>
+					<div id="dropmessage" class="updated" style="display:none;"></div>
+				</div>
+
+				<?php
 					do_action( 'aioseop_global_settings_header', $location );
 					do_action( $this->prefix . 'settings_header', $location );
-?>	<form id="aiosp_settings_form" name="dofollow" enctype="multipart/form-data" action="" method="post">
-		<div id="aioseop_top_button">
-			<div id="aiosp_ajax_settings_message"></div>
-<?php
+				?>
 
-			$submit_options = Array('action'		=> Array( 'type' => 'hidden', 'value' => 'aiosp_update_module' ),
-									'module'		=> Array( 'type' => 'hidden', 'value' => get_class( $this ) ),
-									'location'		=> Array( 'type' => 'hidden', 'value' => $location ),
-									'nonce-aioseop'	=> Array( 'type' => 'hidden', 'value' => wp_create_nonce('aioseop-nonce') ),
-									'page_options'	=> Array( 'type' => 'hidden', 'value' => 'aiosp_home_description' ),
-									'Submit'		=> Array( 'type' => 'submit', 'class' => 'button-primary', 'value' => __('Update Options', 'all-in-one-seo-pack') . ' &raquo;' ),
-									'Submit_Default'=> Array( 'type' => 'submit', 'class' => 'button-secondary', 'value' => __( sprintf( 'Reset %s Settings to Defaults', $name ), 'all-in-one-seo-pack') . ' &raquo;' )
-								   );
-			$submit_options = apply_filters( "{$this->prefix}submit_options", $submit_options, $location );
-			foreach ( $submit_options as $k => $s ) {
-				if ( $s['type'] == 'submit' && $k != 'Submit' ) continue;
-				$class = '';
-				if ( isset( $s['class'] ) ) $class = " class='{$s['class']}' ";
-				echo $this->get_option_html( Array( 'name' => $k, 'options' => $s, 'attr' => $class, 'value' => $s['value'] ) );
-			}
-?>
-		</div>
+				<form
+					id="aiosp_settings_form"
+					name="dofollow"
+					enctype="multipart/form-data"
+					action="" method="post"
+				>
+					<div id="aioseop_top_button">
+						<div id="aiosp_ajax_settings_message"></div>
+
+						<?php
+							$submit_options = Array(
+								'action'		=> Array(
+									'type' 		=> 'hidden',
+									'value' 	=> 'aiosp_update_module'
+								),
+								'module'		=> Array(
+									'type' 		=> 'hidden',
+									'value' 	=> get_class( $this )
+								),
+								'location'		=> Array(
+									'type'  	=> 'hidden',
+									'value' 	=> $location
+								),
+								'nonce-aioseop'	=> Array(
+									'type' 		=> 'hidden',
+									'value' 	=> wp_create_nonce( 'aioseop-nonce' )
+								),
+								'page_options'	=> Array(
+									'type' 		=> 'hidden',
+									'value' 	=> 'aiosp_home_description'
+								),
+								'Submit'		=> Array(
+									'type' 		=> 'submit',
+									'class' 	=> 'button-primary',
+									'value' 	=> __(
+										'Update Options',
+										'all-in-one-seo-pack'
+										) . ' &raquo;'
+									),
+								'Submit_Default'=> Array(
+									'type' 		=> 'submit',
+									'class' 	=> 'button-secondary',
+									'value' 	=> __(
+										sprintf(
+											'Reset %s Settings to Defaults',
+											$name
+										),
+										'all-in-one-seo-pack'
+										) . ' &raquo;'
+									)
+							);
+							$submit_options = apply_filters(
+								"{$this->prefix}submit_options",
+								$submit_options,
+								$location
+							);
+							foreach ( $submit_options as $k => $s )	{
+								if ( $s['type'] == 'submit' && $k != 'Submit' )
+									continue;
+								$class = '';
+								if ( isset( $s['class'] ) )
+									$class = " class='{$s['class']}' ";
+								echo $this->get_option_html( Array(
+									'name' 		=> $k,
+									'options' 	=> $s,
+									'attr' 		=> $class,
+									'value' 	=> $s['value'] )
+								);
+							}
+						?>
+
+					</div>
 					<div class="aioseop_options_wrapper aioseop_settings_left">
-					<?php $opts = $this->get_class_option();
-						  if ($opts !== FALSE) $this->options = $opts;
+
+					<?php
+						$opts = $this->get_class_option();
+						  if ( $opts !== FALSE )
+						  	$this->options = $opts;
 						if ( is_array( $this->layout ) ) {
 							foreach( $this->layout as $l => $lopts ) {
-								if ( !isset( $lopts['tab'] ) || ( $this->current_tab == $lopts['tab'] ) ) {
+								if ( ! isset( $lopts['tab'] )
+									|| ( $this->current_tab == $lopts['tab'] ) ) {
 									$title = $lopts['name'];
 									if ( !empty( $lopts['help_link'] ) )
-										$title .= "<a class='aioseop_help_text_link aioseop_meta_box_help' target='_blank' href='" . $lopts['help_link'] . "'><span>" . __( 'Help', 'all-in-one-seo-pack' ) . "</span></a>";
-									add_meta_box( $this->get_prefix( $location ) . $l . "_metabox", $title, array($this, 'display_options' ),
-												"{$this->prefix}settings", 'advanced', 'default', $lopts );
+										$title .= "<a
+														class='aioseop_help_text_link aioseop_meta_box_help'
+														target='_blank'
+														href='" . $lopts['help_link'] . "'
+													>
+														<span>"
+
+															. __( 'Help', 'all-in-one-seo-pack' ) . "
+
+														</span>
+													</a>";
+									add_meta_box(
+										$this->get_prefix( $location ) . $l . "_metabox",
+										$title,
+										array($this, 'display_options' ),
+										"{$this->prefix}settings",
+										'advanced',
+										'default',
+										$lopts
+									);
 								}
 							}
-						} else add_meta_box( $this->get_prefix( $location ) . "metabox", $name, array($this, 'display_options'), "{$this->prefix}settings", 'advanced');
+						} else
+						add_meta_box(
+							$this->get_prefix( $location ) . "metabox",
+							$name,
+							array($this, 'display_options'),
+							"{$this->prefix}settings",
+							'advanced'
+						);
 						do_meta_boxes( "{$this->prefix}settings", 'advanced', $location );
-?>				<p class="submit" style="clear:both;"><?php
-					foreach( Array( 'action', 'nonce-aioseop', 'page_options' ) as $submit_field )
-						if ( isset( $submit_field ) ) unset( $submit_field );
-					foreach ( $submit_options as $k => $s ) {
-						$class = '';
-						if ( isset( $s['class'] ) ) $class = " class='{$s['class']}' ";
-						echo $this->get_option_html( Array( 'name' => $k, 'options' => $s, 'attr' => $class, 'value' => $s['value'] ) );
-					}
-?>	</p>
-				</div>
+					?>
+
+						<p class="submit" style="clear:both;">
+
+							<?php
+								foreach(
+									Array(
+										'action',
+										'nonce-aioseop',
+										'page_options'
+									)
+									as $submit_field )
+									if ( isset( $submit_field ) )
+										unset( $submit_field );
+								foreach ( $submit_options as $k => $s )	{
+									$class = '';
+									if ( isset( $s['class'] ) )
+										$class = " class='{$s['class']}' ";
+									echo $this->get_option_html( Array(
+										'name' 		=> $k,
+										'options' 	=> $s,
+										'attr' 		=> $class,
+										'value' 	=> $s['value'] )
+									);
+								}
+							?>
+
+						</p>
+					</div>
 				</form>
-					<?php 	do_action( $this->prefix . 'settings_footer', $location );
-							do_action( 'aioseop_global_settings_footer', $location ); ?>
-				</div>	<?php
+
+				<?php
+					do_action( $this->prefix . 'settings_footer', $location );
+					do_action( 'aioseop_global_settings_footer', $location );
+				?>
+
+			</div>
+
+	<?php
 		}
 
 		/**
-		 * Get the prefix used for a given location.
+		 * Gets the prefix used for a given location.
+		 * @since 1.0.0
+		 * @param String $location.
+		 * @return String.
 		 */
 		function get_prefix( $location = null ) {
-			if ( ($location != null ) && isset($this->locations[$location]['prefix'] ) )
+			if ( ( $location != null ) && isset( $this->locations[$location]['prefix'] ) )
 				return $this->locations[$location]['prefix'];
 			return $this->prefix;
 		}
 
-		/** Sets up initial settings */
+		/**
+		 * Sets up initial settings.
+		 * @since 1.0.0
+		 * @param String $location, String $defaults.
+		 * @return array.
+		 */
 		function setting_options( $location = null, $defaults = null ) {
 			if ( $defaults === null )
 				$defaults = $this->default_options;
@@ -2803,43 +3004,66 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				$prefix = "{$prefix}{$location}_";
 				if ( !empty( $this->locations[$location]['default_options'] ) )
 					$options = $this->locations[$location]['default_options'];
-				foreach( $this->locations[$location]['options'] as $opt ) {
+				foreach( $this->locations[$location]['options'] as $opt )	{
 					if ( isset( $defaults[$opt] ) )
 						$options[$opt] = $defaults[$opt];
 				}
 			}
-			if ( !$prefix ) $prefix = $this->prefix;
+			if ( ! $prefix ) $prefix = $this->prefix;
 			if ( !empty( $options ) )
-				foreach ($options as $k => $v) {
-					if ( !isset( $v['name'] ) )		$v['name'] = $this->ucwords( strtr( $k, '_', ' ' ) );
-					if ( !isset( $v['type'] ) )		$v['type'] = 'checkbox';
-					if ( !isset( $v['default'] ) )	$v['default'] = null;
-					if ( !isset( $v['initial_options'] ) ) $v['initial_options'] = $v['default'];
-					if ( $v['type'] == 'custom' && ( !isset( $v['nowrap'] ) ) ) $v['nowrap'] = true;
-					elseif ( !isset( $v['nowrap'] ) ) $v['nowrap'] = null;
-					if ( isset( $v['condshow'] ) ) {
-						if ( !is_array( $this->script_data ) ) $this->script_data = Array();
-						if ( !isset( $this->script_data['condshow'] ) ) $this->script_data['condshow'] = Array();
+				foreach ($options as $k => $v)	{
+					if ( ! isset( $v['name'] ) )
+						$v['name'] = $this->ucwords( strtr( $k, '_', ' ' ) );
+					if ( ! isset( $v['type'] ) )
+						$v['type'] = 'checkbox';
+					if ( ! isset( $v['default'] ) )
+						$v['default'] = null;
+					if ( ! isset( $v['initial_options'] ) )
+						$v['initial_options'] = $v['default'];
+					if ( $v['type'] == 'custom' && ( ! isset( $v['nowrap'] ) ) )
+						$v['nowrap'] = true;
+					elseif ( ! isset( $v['nowrap'] ) )
+						$v['nowrap'] = null;
+					if ( isset( $v['condshow'] ) )
+					{
+						if ( ! is_array( $this->script_data ) )
+							$this->script_data = Array();
+						if ( ! isset( $this->script_data['condshow'] ) )
+							$this->script_data['condshow'] = Array();
 						$this->script_data['condshow'][$prefix . $k] = $v['condshow'];
 					}
-					if ( $v['type'] == 'submit' ) {
-						if ( !isset($v['save'] ) )  $v['save']  = false;
-						if ( !isset($v['label'] ) ) $v['label'] = 'none';
-						if ( !isset($v['prefix'] ) ) $v['prefix'] = false;
+					if ( $v['type'] == 'submit' )
+					{
+						if ( ! isset($v['save'] ) )
+							$v['save']  = false;
+						if ( ! isset($v['label'] ) )
+							$v['label'] = 'none';
+						if ( ! isset($v['prefix'] ) )
+							$v['prefix'] = false;
 					} else {
-						if ( !isset($v['label'] ) ) $v['label'] = null;
+						if ( ! isset($v['label'] ) )
+							$v['label'] = null;
 					}
-					if ( $v['type'] == 'hidden' ) {
-						if ( !isset($v['label']) ) $v['label'] = 'none';
-						if ( !isset($v['prefix']) ) $v['prefix'] = false;
+					if ( $v['type'] == 'hidden' )
+					{
+						if ( ! isset($v['label']) )
+							$v['label'] = 'none';
+						if ( ! isset($v['prefix']) )
+							$v['prefix'] = false;
 					}
-					if  ( ( $v['type'] == 'text' ) && ( !isset( $v['size'] ) ) ) $v['size'] = 57;
-					if ( $v['type'] == 'textarea' ) {
-						if ( !isset($v['cols'])) $v['cols'] = 57;
-						if ( !isset($v['rows'])) $v['rows'] = 2;
+					if  ( ( $v['type'] == 'text' ) && ( ! isset( $v['size'] ) ) )
+						$v['size'] = 57;
+					if ( $v['type'] == 'textarea' )
+					{
+						if ( ! isset($v['cols']))
+							$v['cols'] = 57;
+						if ( ! isset($v['rows']))
+							$v['rows'] = 2;
 					}
-					if ( !isset($v['save']) ) $v['save'] = true;
-					if ( !isset($v['prefix']) ) $v['prefix'] = true;
+					if ( ! isset( $v['save'] ) )
+						$v['save'] = true;
+					if ( ! isset( $v['prefix'] ) )
+						$v['prefix'] = true;
 					if ( $v['prefix'] )
 						$opts[$prefix . $k] = $v;
 					else
@@ -2848,15 +3072,26 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $opts;
 		}
 
-		/** Generates just the default option names and values */
+		/**
+		 * Generates just the default option names and values.
+		 * @param String $location, array $defaults
+		 * @since 1.0.0
+		 * @return array.
+		 */
 		function default_options( $location = null, $defaults = null ) {
 			$options = $this->setting_options( $location, $defaults );
 			$opts = Array();
-			foreach ( $options as $k => $v ) if ( $v['save'] ) $opts[$k] = $v['default'];
+			foreach ( $options as $k => $v ) if ( $v['save'] )
+				$opts[$k] = $v['default'];
 			return $opts;
 		}
 
-		/** Gets the current options stored for a given location. */
+		/**
+		 * Gets the current options stored for a given location.
+		 * @since 1.0.0
+		 * @param array opts, String location, String $defaults, String $post.
+		 * @return array.
+		 */
 		function get_current_options( $opts = Array(), $location = null, $defaults = null, $post = null ) {
 			$prefix = $this->get_prefix( $location );
 			$get_opts = '';
@@ -2864,21 +3099,28 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				$type = 'settings';
 			else
 				$type = $this->locations[$location]['type'];
-			if ( $type === 'settings' ) {
+			if ( $type === 'settings' )	{
 				$get_opts = $this->get_class_option();
-			} elseif ( $type == 'metabox' ) {
-				if ( $post == null ) {
+			} elseif ( $type == 'metabox' )	{
+				if ( $post == null )	{
 					global $post;
 				}
-
-				if ( ( isset( $_GET['taxonomy'] ) && isset( $_GET['tag_ID'] ) ) || is_category() || is_tag() || is_tax() ) {
-
-					if ( AIOSEOPPRO ) {
+				if ( ( isset( $_GET['taxonomy'] )
+					&& isset( $_GET['tag_ID'] ) )
+					|| is_category()
+					|| is_tag()
+					|| is_tax() )	{
+					if ( AIOSEOPPRO )
+					{
 						$get_opts = AIO_ProGeneral::getprotax( $get_opts );
 					}
-
-				} elseif ( isset( $post ) ) {
-					$get_opts = get_post_meta( $post->ID, '_' . $prefix . $location, true );
+				} elseif ( isset( $post ) )	{
+					$get_opts = get_post_meta(
+						$post->ID,
+						'_' . $prefix .
+						$location,
+						true
+					);
 				}
 			}
 			$defs = $this->default_options( $location, $defaults );
@@ -2890,16 +3132,21 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $opts;
 		}
 
-		/** Updates the options array in the module; loads saved settings with get_option() or uses defaults */
+		/**
+		 * Updates the options array in the module, loads saved settings with get_option() or uses defaults.
+		 * @since 1.0.0
+		 * @param array opts, String location, String $defaults.
+		 * @return array.
+		 */
 		function update_options( $opts = Array(), $location = null, $defaults = null ) {
-			if ($location === null )
+			if ( $location === null )
 				$type = 'settings';
 			else
 				$type = $this->locations[$location][$type];
 			if ( $type === 'settings' ) {
 				$get_opts = $this->get_class_option();
 			}
-			if ($get_opts === FALSE)
+			if ( $get_opts === FALSE )
 				$get_opts = $this->default_options( $location, $defaults );
 			else
 				$this->setting_options( $location, $defaults ); // hack -- make sure this runs anyhow, for now -- pdb
