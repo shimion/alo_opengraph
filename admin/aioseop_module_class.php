@@ -199,6 +199,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Converts a string to lower case.
+		 * Compatible with mb_strtolower(),
+		 * an UTF-8 friendly replacement for strtolower()
 		 * @since 1.0.0
 		 * @see mb_strtolower(), strtolower().
 		 * @param String $str.
@@ -210,6 +212,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Convert a string to upper case.
+		 * Compatible with mb_strtoupper(),
+		 * an UTF-8 friendly replacement for strtoupper()
 		 * @since 1.0.0
 		 * @see mb_strtoupper(), strtoupper().
 		 * @param String $str.
@@ -221,6 +225,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Converts a string to title case.
+		 * Compatible with mb_convert_case(),
+		 * an UTF-8 friendly replacement for ucwords()
 		 * @since 1.0.0
 		 * @see mb_convert_case(), ucwords().
 		 * @param String $str.
@@ -912,6 +918,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						'post_type' 		=> $post_types
 						)
 					);
+
+			// Adds all active settings to settings file
 			$name = $this->get_option_name();
 			$options = $this->get_class_option();
 			if( !empty( $options ) && $general_settings != null )	{
@@ -1470,10 +1478,18 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		 * @return Mixed.
 		 */
 		function get_the_image_by_meta_key( $args = array() ) {
+
+			// If $meta_key is not an array.
 			if ( ! is_array( $args['meta_key'] ) )
 				$args['meta_key'] = array( $args['meta_key'] );
+
+			// Loops through each of the given meta keys.
 			foreach ( $args['meta_key'] as $meta_key )	{
+
+				// Gets the image URL by the current meta key in the loop.
 				$image = get_post_meta( $args['post_id'], $meta_key, true );
+
+				// If a custom key value has been given for one of the keys, return the image URL.
 				if ( !empty( $image ) )
 					return $image;
 			}
@@ -1530,11 +1546,21 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					$image = wp_get_attachment_image_src( $post->ID, 'large' );
 				}
 			}
+
+			// If There isn't attachments or image is found, returns false.
 			if ( empty( $attachments ) && empty( $image ) )
 				return false;
+
+			// Sets the default iterator to 0.
 			$i = 0;
-			foreach ( $attachments as $id => $attachment )	{
-				if ( ++$i == 1 )	{
+
+			/**
+			 * Loops through each attachment.
+			 * Once the $order_of_image (default is '1') is reached,
+			 * breaks the loop.
+			 */
+			foreach ( $attachments as $id => $attachment ) {
+				if ( ++$i == 1 ) {
 					$image = wp_get_attachment_image_src( $id, 'large' );
 					$alt = trim(
 						strip_tags(
@@ -1667,6 +1693,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Loads scripts and styles for metaboxes.
+		 *
+		 * edit-tags exists only for pre 4.5 support...
+		 * Removes when we drop 4.5 support.
+		 * Also, that check and others should be pulled out into their own functions
 		 * @since 1.0.0
 		 */
 		function enqueue_metabox_scripts() {
