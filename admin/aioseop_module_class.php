@@ -918,7 +918,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				$buf .= "\n[$name]\n\n";
 				foreach ( $options as $key => $value )	{
 					if ( ( $name == $this->parent_option ) && ( $key == 'modules' ) )
-						continue;
+						continue; // don't re-export all module settings -- pdb
 					if ( is_array( $value ) )
 						$value = "'" . str_replace(
 							Array( "'", "\n", "\r" ),
