@@ -1,10 +1,15 @@
 <?php
-/**
- * @package All-in-One-SEO-Pack
- */
+
 /**
  * The Image Sitemap class.
+ *
+ * @package All-in-One-SEO-Pack
+ *
+ * Optimize your image for SEO.
+ *
+ * @since x.x.x
  */
+
 if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 	class All_in_One_SEO_Pack_Image_Seo extends All_in_One_SEO_Pack_Module {
 		function __construct( ) {
