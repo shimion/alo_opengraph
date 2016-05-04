@@ -14,21 +14,61 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 	class All_in_One_SEO_Pack_Image_Seo extends All_in_One_SEO_Pack_Module {
 		function __construct( ) {
 			if ( get_class( $this ) === 'All_in_One_SEO_Pack_Image_Seo' ) {
-				// Set this up only when instantiated as this class.
+
+				/**
+				 * Human-readable name of the plugin.
+				 *
+				 * @since x.x.x
+				 * @access public
+				 * @var string $name.
+				 */
 				$this->name = __( 'Image SEO', 'all-in-one-seo-pack' );
-				// Human-readable name of the plugin.
+				/**
+				 * Option pre-fix.
+				 *
+				 * @since x.x.x
+				 * @access public
+				 * @var string $prefix.
+				 */
 				$this->prefix = 'aiosp_image_seo_';
-				// Option prefix.
+				/**
+				 * File directory.
+				 *
+				 * @since x.x.x
+				 * @access public
+				 * @var type $file.
+				 */
 				$this->file = __FILE__;
 			}
+			/**
+			 * Help text.
+			 *
+			 * @since x.x.x
+			 * @access public
+			 * @var array $help_text.
+			*/
 			$this->help_text = array(
 				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
 				'title_format' => __( 'Title format of images', 'all-in-one-seo-pack' ),
 			);
+			/**
+			 * Help anchors.
+			 *
+			 * @since x.x.x
+			 * @access public
+			 * @var array $help_anchors.
+			*/
 			$this->help_anchors = array(
 				'title_format' => '#title_format',
 				'use_custom_stuff' => '#use_custom_stuff',
 			);
+			/**
+			 * Default options.
+			 *
+			 * @since x.x.x
+			 * @access public
+			 * @var array $default_options.
+			*/
 			$this->default_options = array(
 					'use_custom_stuff'	=>
 						array(
@@ -49,6 +89,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			if ( isset( $this->options['aiosp_image_seo_types'] ) ) {
 				$display = $this->options['aiosp_image_seo_types'];
 			}
+			/**
+			 * Locations.
+			 *
+			 * @since x.x.x
+			 * @access public
+			 * @var array $locations.
+			*/
 			$this->locations = array(
 				'image_seo'	=> array(
 					'name' => $this->name,
@@ -60,6 +107,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				 	)
 									)
 			);
+			/**
+			 * Layout.
+			 *
+			 * @since x.x.x
+			 * @access public
+			 * @var array $locations.
+			*/
 			$this->layout = array(
 				'default' => array(
 						'name' => __( 'General Settings', 'all-in-one-seo-pack' ),
