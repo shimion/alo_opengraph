@@ -39,6 +39,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				 * @var type $file.
 				 */
 				$this->file = __FILE__;
+				add_filter( 'wp_get_attachment_image_attributes', array($this, 'edit_image_attributes'), 10 , 3 );
 			}
 			/**
 			 * Help text.
@@ -136,6 +137,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						$this->add_help_text_links();
 			parent::__construct();
 		}
+		public function edit_image_attributes( $attr, $attachment, $size ) {
+			$attr["alt"] = esc_html(get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ));
+			$title = $attachment->post_title;
+			$attr["title"] = esc_html( str_replace( "%image_title%", $attachment->post_title, $this->options['aiosp_image_seo_title_format']  ) );
+			return $attr;
+		}
 	}
 }
+
+
 
