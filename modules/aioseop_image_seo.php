@@ -3,11 +3,13 @@
 /**
  * The Image Sitemap class.
  *
+ * @author Semper Fi Web Design.
+ * @copyright http://semperplugins.com
  * @package All-in-One-SEO-Pack
  *
  * Optimize your image for SEO.
  *
- * @since x.x.x
+ * @since 1.0.0
  */
 
 if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
@@ -18,7 +20,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				/**
 				 * Human-readable name of the plugin.
 				 *
-				 * @since x.x.x
+				 * @since 1.0.0
 				 * @access public
 				 * @var string $name.
 				 */
@@ -26,7 +28,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				/**
 				 * Option pre-fix.
 				 *
-				 * @since x.x.x
+				 * @since 1.0.0
 				 * @access public
 				 * @var string $prefix.
 				 */
@@ -34,17 +36,17 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				/**
 				 * File directory.
 				 *
-				 * @since x.x.x
+				 * @since 1.0.0
 				 * @access public
 				 * @var type $file.
 				 */
 				$this->file = __FILE__;
-				add_filter( 'wp_get_attachment_image_attributes', array($this, 'edit_image_attributes'), 10 , 3 );
+				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'edit_image_attributes'), 10 , 2 );
 			}
 			/**
 			 * Help text.
 			 *
-			 * @since x.x.x
+			 * @since 1.0.0
 			 * @access public
 			 * @var array $help_text.
 			*/
@@ -55,7 +57,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			/**
 			 * Help anchors.
 			 *
-			 * @since x.x.x
+			 * @since 1.0.0
 			 * @access public
 			 * @var array $help_anchors.
 			*/
@@ -66,7 +68,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			/**
 			 * Default options.
 			 *
-			 * @since x.x.x
+			 * @since 1.0.0
 			 * @access public
 			 * @var array $default_options.
 			*/
@@ -93,7 +95,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			/**
 			 * Locations.
 			 *
-			 * @since x.x.x
+			 * @since 1.0.0
 			 * @access public
 			 * @var array $locations.
 			*/
@@ -111,7 +113,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			/**
 			 * Layout.
 			 *
-			 * @since x.x.x
+			 * @since 1.0.0
 			 * @access public
 			 * @var array $locations.
 			*/
@@ -137,10 +139,20 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						$this->add_help_text_links();
 			parent::__construct();
 		}
-		public function edit_image_attributes( $attr, $attachment, $size ) {
-			$attr["alt"] = esc_html(get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ));
+		/**
+		 * Edit image attributes.
+		 *
+		 * Insert AISEOP values into images if they are set.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array  $attr  Attributes for image contained in meta values.
+		 * @param object $attachment Attachment object.
+		 */
+		public function edit_image_attributes( $attr, $attachment ) {
+			$attr['alt'] = esc_html( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
 			$title = $attachment->post_title;
-			$attr["title"] = esc_html( str_replace( "%image_title%", $attachment->post_title, $this->options['aiosp_image_seo_title_format']  ) );
+			$attr['title'] = esc_html( str_replace( '%image_title%', $attachment->post_title, $this->options['aiosp_image_seo_title_format'] ) );
 			return $attr;
 		}
 	}
