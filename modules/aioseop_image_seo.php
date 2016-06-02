@@ -54,6 +54,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$this->help_text = array(
 				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
 				'title_format' => __( 'Title format of images', 'all-in-one-seo-pack' ),
+				'alt_format' => __( 'Alt tag format', 'all-in-one-seo-pack' )
 			);
 			/**
 			 * Help anchors.
@@ -63,6 +64,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			 * @var array $help_anchors.
 			*/
 			$this->help_anchors = array(
+				'alt_format' => '#alt_format',
 				'title_format' => '#title_format',
 				'use_custom_stuff' => '#use_custom_stuff',
 			);
@@ -84,7 +86,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 							'default' => '%image_title%',
 							'type' => 'text',
 							'sanitize' => 'text',
-						)
+						),
+						'alt_format' => array(
+							'name'	=> __( 'Alt Tag Format',  'all-in-one-seo-pack' ),
+							'default' => '%alt_tag%',
+							'type' => 'text',
+							'sanitize' => 'text',
+						),
 						);
 			// Load initial options / set defaults.
 			$this->update_options( );
@@ -107,6 +115,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				 'type' => 'settings',
 				 'options' => array(
 				 	'title_format', 
+				 	'alt_format', 
 				 	'use_custom_stuff',
 				 	)
 									)
@@ -128,7 +137,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				'home'  => array(
 						'name' => __( 'Home Page Settings', 'all-in-one-seo-pack' ),
 						'help_link' => 'http://semperplugins.com/documentation/home-page-settings/',
-						'options' => array( 'title_format' ),
+						'options' => array( 'title_format','alt_format' ),
 					)
 			);
 			$other_options = array();
@@ -171,9 +180,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		public function edit_image_tag( $html, $id ) {
 			$post = get_post( $id );
 			$title = $post->post_title;
-			if ( !empty( $title ) ) {
-				$html = str_replace(' />', ' title="' . $title . '" />', $html );
-			}
+			$title = esc_html( str_replace( '%image_title%', $post->post_title, $this->options['aiosp_image_seo_title_format'] ) );
+			$html = str_replace(' />', ' title="' . $title . '" />', $html );
 			return $html;
 		}
 	}
