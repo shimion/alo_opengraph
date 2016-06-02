@@ -42,6 +42,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				 */
 				$this->file = __FILE__;
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'edit_image_attributes'), 10 , 2 );
+				add_filter( 'get_image_tag', array( $this, 'edit_image_tag'), 10 , 2 );
 			}
 			/**
 			 * Help text.
@@ -139,6 +140,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						$this->add_help_text_links();
 			parent::__construct();
 		}
+
 		/**
 		 * Edit image attributes.
 		 *
@@ -154,6 +156,25 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$title = $attachment->post_title;
 			$attr['title'] = esc_html( str_replace( '%image_title%', $attachment->post_title, $this->options['aiosp_image_seo_title_format'] ) );
 			return $attr;
+		}
+
+		/**
+		 * Add image tags.
+		 *
+		 * Insert AISEOP values into images if they are set for embedded images.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string  $html  Markup returned for html tag
+		 * @param int $id Attachment id.
+		 */
+		public function edit_image_tag( $html, $id ) {
+			$post = get_post( $id );
+			$title = $post->post_title;
+			if ( !empty( $title ) ) {
+				$html = str_replace(' />', ' title="' . $title . '" />', $html );
+			}
+			return $html;
 		}
 	}
 }
