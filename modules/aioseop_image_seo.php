@@ -42,7 +42,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				 */
 				$this->file = __FILE__;
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'edit_image_attributes'), 10 , 2 );
-				add_filter( 'get_image_tag', array( $this, 'edit_image_tag'), 10 , 2 );
+				add_filter( 'get_image_tag', array( $this, 'edit_image_tag'), 10 , 4 );
 			}
 			/**
 			 * Help text.
@@ -89,7 +89,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						),
 						'alt_format' => array(
 							'name'	=> __( 'Alt Tag Format',  'all-in-one-seo-pack' ),
-							'default' => '%alt_tag%',
+							'default' => '%alt%',
 							'type' => 'text',
 							'sanitize' => 'text',
 						),
@@ -164,8 +164,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			return $title;
 		}
 
-		public function apply_alt_format( $title ) {
-			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
+		public function apply_alt_format( $alt ) {
+			$title = str_replace( '%alt%', $alt, $this->options['aiosp_image_seo_alt_format'] );
 			return $title;
 		}
 
@@ -181,7 +181,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @param object $attachment Attachment object.
 		 */
 		public function edit_image_attributes( $attr, $attachment ) {
-			$attr['alt'] = get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true );
+			$attr['alt'] = $this->apply_alt_format( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
 			$attr['title'] = $this->apply_title_format( $attachment->post_title );
 			return $attr;
 		}
@@ -196,11 +196,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @param string  $html  Markup returned for html tag
 		 * @param int $id Attachment id.
 		 */
-		public function edit_image_tag( $html, $id ) {
+		public function edit_image_tag( $html, $id, $alt, $title ) {
 			$post = get_post( $id );
 			$title = $this->apply_title_format( $post->post_title );
+			$formatted_alt = $this->apply_alt_format( $alt );
 			$html = str_replace(' />', ' title="' . esc_attr( $title ) . '" />', $html );
-			return $html;
+			return str_replace("alt=\"{$alt}\"", "alt=\"{$formatted_alt}\"", $html);;
 		}
 	}
 }
