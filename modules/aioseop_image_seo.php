@@ -149,6 +149,26 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						$this->add_help_text_links();
 			parent::__construct();
 		}
+		
+		/**
+		 * Helper function to apply image title format where appropriate.
+		 *
+		 * Use the format options to display the image title
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $title Title being passed.
+		 */
+		public function apply_title_format( $title ) {
+			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
+			return $title;
+		}
+
+		public function apply_alt_format( $title ) {
+			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
+			return $title;
+		}
+
 
 		/**
 		 * Edit image attributes.
@@ -161,9 +181,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @param object $attachment Attachment object.
 		 */
 		public function edit_image_attributes( $attr, $attachment ) {
-			$attr['alt'] = esc_html( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
-			$title = $attachment->post_title;
-			$attr['title'] = esc_html( str_replace( '%image_title%', $attachment->post_title, $this->options['aiosp_image_seo_title_format'] ) );
+			$attr['alt'] = get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true );
+			$attr['title'] = $this->apply_title_format( $attachment->post_title );
 			return $attr;
 		}
 
@@ -179,9 +198,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 */
 		public function edit_image_tag( $html, $id ) {
 			$post = get_post( $id );
-			$title = $post->post_title;
-			$title = esc_html( str_replace( '%image_title%', $post->post_title, $this->options['aiosp_image_seo_title_format'] ) );
-			$html = str_replace(' />', ' title="' . $title . '" />', $html );
+			$title = $this->apply_title_format( $post->post_title );
+			$html = str_replace(' />', ' title="' . esc_attr( $title ) . '" />', $html );
 			return $html;
 		}
 	}
