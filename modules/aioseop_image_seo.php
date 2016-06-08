@@ -140,6 +140,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						'options' => array( 'title_format','alt_format' ),
 					)
 			);
+			global $post;
+
+
 			$other_options = array();
 			foreach ( $this->layout as $k => $v ) {
 				$other_options = array_merge( $other_options, $v['options'] );
@@ -150,6 +153,20 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			parent::__construct();
 		}
 		
+		public function find_replacements( $post ) {
+			$categories =  wp_get_post_categories ( $post->ID );
+			$category_title = get_cat_name( $categories[0] );
+			$post_type = get_post_type( $post->ID );
+			$replacements = array(
+				'%blog_title%' => get_bloginfo( 'name' ),
+				'%post_title%' => $post->post_title,
+				'%category_title%' => $category_title,
+				'%post_type%' => $post_type
+			);
+			return $replacements;
+		}
+
+
 		/**
 		 * Helper function to apply image title format where appropriate.
 		 *
@@ -160,13 +177,25 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @param string $title Title being passed.
 		 */
 		public function apply_title_format( $title ) {
+			global $post;
+
 			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
+				foreach ( $this->find_replacements( $post ) as $key => $value ) {
+					if ( strrpos( $title, $key ) != false ) {
+							$title = str_replace( $key, $value, $title );
+					}
+				}
 			return $title;
 		}
 
 		public function apply_alt_format( $alt ) {
-			$title = str_replace( '%alt%', $alt, $this->options['aiosp_image_seo_alt_format'] );
-			return $title;
+			$alt = str_replace( '%alt%', $alt, $this->options['aiosp_image_seo_alt_format'] );
+			foreach ( $this->find_replacements( $post ) as $key => $value ) {
+					if ( strrpos( $title, $key ) != false ) {
+							$title = str_replace( $key, $value, $title );
+					}
+			}
+			return $alt;
 		}
 
 
