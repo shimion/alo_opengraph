@@ -146,7 +146,9 @@ There are tools out there for apps like Netbeans and PHPStorm to apply WordPress
 We would love your help translating the project into your language. [Translations](https://translate.wordpress.org/projects/wp-plugins/all-in-one-seo-pack)
 
 
-*more instructions coming soon
+[How to Contribute Translations](https://github.com/semperfiwebdesign/all-in-one-seo-pack/wiki/Translating-into-your-language)
+
+[Translations FAQ](https://github.com/semperfiwebdesign/all-in-one-seo-pack/wiki/Translations-FAQ)
 
 
 ---
