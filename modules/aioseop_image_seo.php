@@ -43,6 +43,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				$this->file = __FILE__;
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'edit_image_attributes'), 10 , 2 );
 				add_filter( 'get_image_tag', array( $this, 'edit_image_tag'), 10 , 4 );
+				add_filter( 'the_content', array( $this, 'aioseo_the_content') );
 			}
 			/**
 			 * Help text.
@@ -54,7 +55,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$this->help_text = array(
 				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
 				'title_format' => __( 'Title format of images', 'all-in-one-seo-pack' ),
-				'alt_format' => __( 'Alt tag format', 'all-in-one-seo-pack' )
+				'alt_format' => __( 'Alt tag format', 'all-in-one-seo-pack' ),
+				'alt_strip_punc' => __( 'Strip puncuation from alt tags', 'all-in-one-seo-pack' ),
+				'title_strip_punc' => __( 'Strip puncuation from title tags', 'all-in-one-seo-pack' ),
 			);
 			/**
 			 * Help anchors.
@@ -66,7 +69,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$this->help_anchors = array(
 				'alt_format' => '#alt_format',
 				'title_format' => '#title_format',
-				'use_custom_stuff' => '#use_custom_stuff',
+				'title_strip_punc' => '#title_strip_punc',
+				'alt_strip_punc' => '#alt_strip_punc',
 			);
 			/**
 			 * Default options.
@@ -93,6 +97,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 							'type' => 'text',
 							'sanitize' => 'text',
 						),
+						'alt_strip_punc' => array(
+							'name'	=> __( 'Strip punctuation from alt tag',  'all-in-one-seo-pack' ),
+							'type' => 'checkbox',
+						),
+						'title_strip_punc' => array(
+							'name'	=> __( 'Strip punctuation from title tag',  'all-in-one-seo-pack' ),
+							'type' => 'checkbox',
+						),
 						);
 			// Load initial options / set defaults.
 			$this->update_options( );
@@ -114,8 +126,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				 'prefix' => 'aiosp_',
 				 'type' => 'settings',
 				 'options' => array(
-				 	'title_format', 
-				 	'alt_format', 
+				 	'title_format',
+				 	'title_strip_punc', 
+				 	'alt_format',
+				 	'alt_strip_punc', 
 				 	'use_custom_stuff',
 				 	)
 									)
@@ -137,7 +151,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				'home'  => array(
 						'name' => __( 'Home Page Settings', 'all-in-one-seo-pack' ),
 						'help_link' => 'http://semperplugins.com/documentation/home-page-settings/',
-						'options' => array( 'title_format','alt_format' ),
+						'options' => array( 'title_format', 'title_strip_punc', 'alt_format', 'alt_strip_punc' ),
 					)
 			);
 			global $post;
@@ -166,6 +180,29 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			return $replacements;
 		}
 
+		public function strip_puncuation( $str ) {
+			$puncuation = array(
+				'&#039;',
+				"'",
+				"&quot;",
+				'"',
+				'-',
+				':',
+				';',
+				'...',
+				'. . .',
+				'!',
+				'[',
+				']',
+				'}',
+				'{',
+			);
+			foreach( $puncuation as $mark ) {
+				$exists = strpos( $str, $mark );
+				$str = str_replace( $mark, "", $str );
+			}
+			return $str;
+		}
 
 		/**
 		 * Helper function to apply image title format where appropriate.
@@ -178,22 +215,39 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 */
 		public function apply_title_format( $title ) {
 			global $post;
-
+			$title = str_replace('"', '', $title);
 			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
 				foreach ( $this->find_replacements( $post ) as $key => $value ) {
 					if ( strrpos( $title, $key ) != false ) {
 							$title = str_replace( $key, $value, $title );
 					}
 				}
+			if ( $this->options['aiosp_image_seo_title_strip_punc']  == "on" ) {
+				$title = $this->strip_puncuation( $title );
+			}
 			return $title;
 		}
-
+		
+		/**
+		 * Helper function to apply image alt format where appropriate.
+		 *
+		 * Use the format options to display the image title
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $alt Alt tag being passed.
+		 */
 		public function apply_alt_format( $alt ) {
+			global $post;
+			$alt = str_replace('"', '', $alt);
 			$alt = str_replace( '%alt%', $alt, $this->options['aiosp_image_seo_alt_format'] );
 			foreach ( $this->find_replacements( $post ) as $key => $value ) {
-					if ( strrpos( $title, $key ) != false ) {
-							$title = str_replace( $key, $value, $title );
+					if ( strrpos( $alt, $key ) != false ) {
+							$alt = str_replace( $key, $value, $alt );
 					}
+			}
+			if ( $this->options['aiosp_image_seo_alt_strip_punc']  == "on" ) {
+				$alt = $this->strip_puncuation( $alt );
 			}
 			return $alt;
 		}
@@ -202,7 +256,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		/**
 		 * Edit image attributes.
 		 *
-		 * Insert AISEOP values into images if they are set.
+		 * Insert AISEOP title into injected post image.
 		 *
 		 * @since 1.0.0
 		 *
@@ -218,19 +272,53 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		/**
 		 * Add image tags.
 		 *
+		 * Insert title tags into embedded images as they are not there by default.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $html  Markup returned for html tag.
+		 * @param int    $id Attachment id.
+		 */
+		public function edit_image_tag( $html, $id, $alt, $title ) {
+			$post = get_post( $id );
+			$title = $post->post_title;
+			$html = str_replace( ' />', ' title="' . esc_attr( $title ) . '" />', $html );
+			return $html;
+		}
+
+		/**
+		 * Add image tags to images in post content.
+		 *
 		 * Insert AISEOP values into images if they are set for embedded images.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param string  $html  Markup returned for html tag
-		 * @param int $id Attachment id.
+		 * @param string $content Content of post.
 		 */
-		public function edit_image_tag( $html, $id, $alt, $title ) {
-			$post = get_post( $id );
-			$title = $this->apply_title_format( $post->post_title );
-			$formatted_alt = $this->apply_alt_format( $alt );
-			$html = str_replace(' />', ' title="' . esc_attr( $title ) . '" />', $html );
-			return str_replace("alt=\"{$alt}\"", "alt=\"{$formatted_alt}\"", $html);;
+		public function aioseo_the_content( $content ) {
+			$replaced = preg_replace_callback( '/<img[^>]+/', array( $this, 'replace_tags' ), $content, 20 );
+			return $replaced;
+		}
+
+		/**
+		 * Apply customized alt/image tags to embedded images.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $matches Image tags returned for post using regex call.
+		 */
+		public function replace_tags( $matches ) {
+			// Blow up image tags into components/attributes.
+			$pieces = preg_split( '/(\w+=)/', $matches[0], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+			if ( in_array('alt=', $pieces) ) {
+				$index	= array_search( 'alt=', $pieces );
+				$pieces[$index + 1] = '"' . $this->apply_alt_format( $pieces[$index + 1] ) . '" ';
+			}
+			if ( in_array('title=', $pieces) ) {
+				$index	= array_search( 'title=', $pieces );
+				$pieces[$index + 1] = '"' . $this->apply_title_format( $pieces[$index + 1] ) . '" ';
+			}
+			return implode( '', $pieces ) . ' /';
 		}
 	}
 }
