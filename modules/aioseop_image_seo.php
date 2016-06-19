@@ -145,7 +145,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 */
 		public function help_values() {
 			$this->help_text    = array(
-				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
+				'use_custom_stuff' => __( 'Use customized titles', 'all-in-one-seo-pack' ),
 				'title_format'     => __( 'Title format of images', 'all-in-one-seo-pack' ),
 				'alt_format'       => __( 'Alt tag format', 'all-in-one-seo-pack' ),
 				'alt_strip_punc'   => __( 'Strip puncuation from alt tags', 'all-in-one-seo-pack' ),
