@@ -269,7 +269,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		/**
 		 * Edit image attributes.
 		 *
-		 * Insert AISEOP title into injected post image.
+		 * Insert AIOSEOP title into injected post image.
 		 *
 		 * @since 1.0.0
 		 *
@@ -311,7 +311,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		/**
 		 * Add image tags to images in post content.
 		 *
-		 * Insert AISEOP values into images if they are set for embedded images.
+		 * Insert AIOSEOP values into images if they are set for embedded images.
 		 *
 		 * @since 1.0.0
 		 *
