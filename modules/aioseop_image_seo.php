@@ -11,7 +11,14 @@
 
 if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 
+	/**
+	 * Class All_in_One_SEO_Pack_Image_Seo
+	 */
 	class All_in_One_SEO_Pack_Image_Seo extends All_in_One_SEO_Pack_Module {
+
+		/**
+		 * All_in_One_SEO_Pack_Image_Seo constructor.
+		 */
 		function __construct() {
 			if ( get_class( $this ) === 'All_in_One_SEO_Pack_Image_Seo' ) {
 
@@ -152,6 +159,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			);
 		}
 
+		/**
+		 * @param $post
+		 *
+		 * @return array
+		 */
 		public function find_replacements( $post ) {
 			$categories           = wp_get_post_categories( $post->ID );
 			$category_title       = get_cat_name( $categories[0] );
@@ -170,11 +182,16 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			return $replacements;
 		}
 
+		/**
+		 * @param $str
+		 *
+		 * @return mixed
+		 */
 		public function strip_puncuation( $str ) {
 			$puncuation = array(
 				'&#039;',
 				"'",
-				"&quot;",
+				'&quot;',
 				'"',
 				'-',
 				':',
@@ -188,7 +205,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				'{',
 			);
 			foreach ( $puncuation as $mark ) {
-				$str = str_replace( $mark, "", $str );
+				$str = str_replace( $mark, '', $str );
 			}
 
 			return $str;
@@ -202,6 +219,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param string $title Title being passed.
+		 *
+		 * @return mixed|string
 		 */
 		public function apply_title_format( $title ) {
 			global $post;
@@ -212,7 +231,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					$title = str_replace( $key, $value, $title );
 				}
 			}
-			if ( $this->options['aiosp_image_seo_title_strip_punc'] == "on" ) {
+			if ( $this->options['aiosp_image_seo_title_strip_punc'] == 'on' ) {
 				$title = $this->strip_puncuation( $title );
 			}
 
@@ -227,6 +246,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param string $alt Alt tag being passed.
+		 *
+		 * @return mixed|string
 		 */
 		public function apply_alt_format( $alt ) {
 			global $post;
@@ -237,7 +258,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					$alt = str_replace( $key, $value, $alt );
 				}
 			}
-			if ( $this->options['aiosp_image_seo_alt_strip_punc'] == "on" ) {
+			if ( $this->options['aiosp_image_seo_alt_strip_punc'] == 'on' ) {
 				$alt = $this->strip_puncuation( $alt );
 			}
 
@@ -254,6 +275,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 *
 		 * @param array $attr Attributes for image contained in meta values.
 		 * @param object $attachment Attachment object.
+		 *
+		 * @return array
 		 */
 		public function edit_image_attributes( $attr, $attachment ) {
 			$attr['alt']   = $this->apply_alt_format( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
@@ -271,6 +294,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 *
 		 * @param string $html Markup returned for html tag.
 		 * @param int $id Attachment id.
+		 * @param $alt
+		 * @param $title
+		 *
+		 * @return mixed|string
+		 * @return mixed|string
 		 */
 		public function edit_image_tag( $html, $id, $alt, $title ) {
 			$post  = get_post( $id );
@@ -288,6 +316,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param string $content Content of post.
+		 *
+		 * @return mixed
 		 */
 		public function aioseo_the_content( $content ) {
 			$replaced = preg_replace_callback( '/<img[^>]+/', array( $this, 'replace_tags' ), $content, 20 );
@@ -301,6 +331,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param array $matches Image tags returned for post using regex call.
+		 *
+		 * @return string
 		 */
 		public function replace_tags( $matches ) {
 			// Blow up image tags into components/attributes.
