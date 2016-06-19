@@ -45,33 +45,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				add_filter( 'get_image_tag', array( $this, 'edit_image_tag'), 10 , 4 );
 				add_filter( 'the_content', array( $this, 'aioseo_the_content') );
 			}
-			/**
-			 * Help text.
-			 *
-			 * @since 1.0.0
-			 * @access public
-			 * @var array $help_text.
-			*/
-			$this->help_text = array(
-				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
-				'title_format' => __( 'Title format of images', 'all-in-one-seo-pack' ),
-				'alt_format' => __( 'Alt tag format', 'all-in-one-seo-pack' ),
-				'alt_strip_punc' => __( 'Strip puncuation from alt tags', 'all-in-one-seo-pack' ),
-				'title_strip_punc' => __( 'Strip puncuation from title tags', 'all-in-one-seo-pack' ),
-			);
-			/**
-			 * Help anchors.
-			 *
-			 * @since 1.0.0
-			 * @access public
-			 * @var array $help_anchors.
-			*/
-			$this->help_anchors = array(
-				'alt_format' => '#alt_format',
-				'title_format' => '#title_format',
-				'title_strip_punc' => '#title_strip_punc',
-				'alt_strip_punc' => '#alt_strip_punc',
-			);
+
 			/**
 			 * Default options.
 			 *
@@ -106,41 +80,46 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 							'type' => 'checkbox',
 						),
 						);
+
+			$this->help_values();
+			$this->layout_locations();
 			// Load initial options / set defaults.
 			$this->update_options( );
-
 			$display = array();
 			if ( isset( $this->options['aiosp_image_seo_types'] ) ) {
 				$display = $this->options['aiosp_image_seo_types'];
 			}
-			/**
-			 * Locations.
-			 *
-			 * @since 1.0.0
-			 * @access public
-			 * @var array $locations.
-			*/
+			global $post;
+			$other_options = array();
+			foreach ( $this->layout as $k => $v ) {
+				$other_options = array_merge( $other_options, $v['options'] );
+			}
+			$this->layout['default']['options'] = array_diff( array_keys( $this->default_options ), $other_options );
+						$this->add_help_text_links();
+			parent::__construct();
+		}
+		/**
+		 * Set location layout values.
+		 *
+		 *
+		 * @since 1.0.0
+		 *
+		 */
+		public function layout_locations() {
 			$this->locations = array(
 				'image_seo'	=> array(
 					'name' => $this->name,
 				 'prefix' => 'aiosp_',
 				 'type' => 'settings',
 				 'options' => array(
+				 	'use_custom_stuff',
 				 	'title_format',
 				 	'title_strip_punc', 
 				 	'alt_format',
 				 	'alt_strip_punc', 
-				 	'use_custom_stuff',
 				 	)
 									)
 			);
-			/**
-			 * Layout.
-			 *
-			 * @since 1.0.0
-			 * @access public
-			 * @var array $locations.
-			*/
 			$this->layout = array(
 				'default' => array(
 						'name' => __( 'General Settings', 'all-in-one-seo-pack' ),
@@ -148,34 +127,43 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 						'options' => array(),
 						// This is set below, to the remaining options -- pdb.
 					),
-				'home'  => array(
-						'name' => __( 'Home Page Settings', 'all-in-one-seo-pack' ),
-						'help_link' => 'http://semperplugins.com/documentation/home-page-settings/',
-						'options' => array( 'title_format', 'title_strip_punc', 'alt_format', 'alt_strip_punc' ),
-					)
 			);
-			global $post;
-
-
-			$other_options = array();
-			foreach ( $this->layout as $k => $v ) {
-				$other_options = array_merge( $other_options, $v['options'] );
-			}
-
-			$this->layout['default']['options'] = array_diff( array_keys( $this->default_options ), $other_options );
-						$this->add_help_text_links();
-			parent::__construct();
 		}
-		
+		/**
+		 * Set help text and anchors
+		 *
+		 *
+		 * @since 1.0.0
+		 *
+		 */
+		public function help_values() {
+			$this->help_text = array(
+				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
+				'title_format' => __( 'Title format of images', 'all-in-one-seo-pack' ),
+				'alt_format' => __( 'Alt tag format', 'all-in-one-seo-pack' ),
+				'alt_strip_punc' => __( 'Strip puncuation from alt tags', 'all-in-one-seo-pack' ),
+				'title_strip_punc' => __( 'Strip puncuation from title tags', 'all-in-one-seo-pack' ),
+			);
+			$this->help_anchors = array(
+				'alt_format' => '#alt_format',
+				'title_format' => '#title_format',
+				'title_strip_punc' => '#title_strip_punc',
+				'alt_strip_punc' => '#alt_strip_punc',
+			);			
+		}
 		public function find_replacements( $post ) {
 			$categories =  wp_get_post_categories ( $post->ID );
 			$category_title = get_cat_name( $categories[0] );
 			$post_type = get_post_type( $post->ID );
+			$post_seo_title = get_post_meta( $post->ID, '_aioseop_title', true );
+			$post_seo_description = get_post_meta( $post->ID, '_aioseop_description', true );
 			$replacements = array(
 				'%blog_title%' => get_bloginfo( 'name' ),
 				'%post_title%' => $post->post_title,
 				'%category_title%' => $category_title,
-				'%post_type%' => $post_type
+				'%post_type%' => $post_type,
+				'%post_seo_title%' => $post_seo_title,
+				'%post_seo_description%' => $post_seo_description,
 			);
 			return $replacements;
 		}
@@ -198,7 +186,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				'{',
 			);
 			foreach( $puncuation as $mark ) {
-				$exists = strpos( $str, $mark );
 				$str = str_replace( $mark, "", $str );
 			}
 			return $str;
