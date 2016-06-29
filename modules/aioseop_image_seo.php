@@ -13,31 +13,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 
 	class All_in_One_SEO_Pack_Image_Seo extends All_in_One_SEO_Pack_Module {
 		function __construct() {
-			if ( get_class( $this ) === 'All_in_One_SEO_Pack_Image_Seo' ) {
+			if ( 'All_in_One_SEO_Pack_Image_Seo' === get_class( $this ) ) {
 
-				/**
-				 * Human-readable name of the plugin.
-				 *
-				 * @since 1.0.0
-				 * @access public
-				 * @var string $name
-				 */
 				$this->name = __( 'Image SEO', 'all-in-one-seo-pack' );
-				/**
-				 * Option pre-fix.
-				 *
-				 * @since 1.0.0
-				 * @access public
-				 * @var string $prefix
-				 */
 				$this->prefix = 'aiosp_image_seo_';
-				/**
-				 * File directory.
-				 *
-				 * @since 1.0.0
-				 * @access public
-				 * @var type $file
-				 */
 				$this->file = __FILE__;
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'edit_image_attributes' ), 10, 2 );
 				add_filter( 'get_image_tag', array( $this, 'edit_image_tag' ), 10, 4 );
