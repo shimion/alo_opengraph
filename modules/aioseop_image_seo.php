@@ -52,7 +52,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			 * @var array $default_options
 			 */
 			$this->default_options = array(
-				'use_custom_stuff' =>
+				'use_aiseo_image_tags' =>
 					array(
 						'name' => __( 'Use AIOSEO Image Title and Alt tag', 'all-in-one-seo-pack' ),
 						'type' => 'checkbox',
@@ -111,7 +111,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					'prefix'  => 'aiosp_',
 					'type'    => 'settings',
 					'options' => array(
-						'use_custom_stuff',
+						'use_aiseo_image_tags',
 						'title_format',
 						'title_strip_punc',
 						'alt_format',
@@ -138,7 +138,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 */
 		public function help_values() {
 			$this->help_text    = array(
-				'use_custom_stuff' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
+				'use_aiseo_image_tags' => __( "Use AISEOP's customized titles", 'all-in-one-seo-pack' ),
 				'title_format'     => __( 'Title format of images', 'all-in-one-seo-pack' ),
 				'alt_format'       => __( 'Alt tag format', 'all-in-one-seo-pack' ),
 				'alt_strip_punc'   => __( 'Strip puncuation from alt tags', 'all-in-one-seo-pack' ),
@@ -212,7 +212,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					$title = str_replace( $key, $value, $title );
 				}
 			}
-			if ( $this->options['aiosp_image_seo_title_strip_punc'] == "on" ) {
+			if ( 'on' === $this->options['aiosp_image_seo_title_strip_punc'] ) {
 				$title = $this->strip_puncuation( $title );
 			}
 
@@ -237,7 +237,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					$alt = str_replace( $key, $value, $alt );
 				}
 			}
-			if ( $this->options['aiosp_image_seo_alt_strip_punc'] == "on" ) {
+			if ( 'on' === $this->options['aiosp_image_seo_alt_strip_punc'] ) {
 				$alt = $this->strip_puncuation( $alt );
 			}
 
@@ -256,8 +256,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @param object $attachment Attachment object.
 		 */
 		public function edit_image_attributes( $attr, $attachment ) {
-			$attr['alt']   = $this->apply_alt_format( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
-			$attr['title'] = $this->apply_title_format( $attachment->post_title );
+			if ( 'on' === $this->options['aiosp_image_seo_use_aiseo_image_tags'] ) {
+				$attr['alt']   = $this->apply_alt_format( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
+				$attr['title'] = $this->apply_title_format( $attachment->post_title );
+			}
 
 			return $attr;
 		}
@@ -290,9 +292,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @param string $content Content of post.
 		 */
 		public function aioseo_the_content( $content ) {
-			$replaced = preg_replace_callback( '/<img[^>]+/', array( $this, 'replace_tags' ), $content, 20 );
-
-			return $replaced;
+			if ( 'on' === $this->options['aiosp_image_seo_use_aiseo_image_tags'] ) {
+			$content = preg_replace_callback( '/<img[^>]+/', array( $this, 'replace_tags' ), $content, 20 );
+			}
+			return $content;
 		}
 
 		/**
