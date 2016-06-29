@@ -35,11 +35,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$this->layout_locations();
 			// Load initial options / set defaults.
 			$this->update_options();
-			$display = array();
-			if ( isset( $this->options['aiosp_image_seo_types'] ) ) {
-				$display = $this->options['aiosp_image_seo_types'];
-			}
-			global $post;
 			$other_options = array();
 			foreach ( $this->layout as $k => $v ) {
 				$other_options = array_merge( $other_options, $v['options'] );
@@ -296,11 +291,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		public function replace_tags( $matches ) {
 			// Blow up image tags into components/attributes.
 			$pieces = preg_split( '/(\w+=)/', $matches[0], - 1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
-			if ( in_array( 'alt=', $pieces ) ) {
+			if ( in_array( 'alt=', $pieces, true ) ) {
 				$index                = array_search( 'alt=', $pieces );
 				$pieces[ $index + 1 ] = '"' . $this->apply_alt_format( $pieces[ $index + 1 ] ) . '" ';
 			}
-			if ( in_array( 'title=', $pieces ) ) {
+			if ( in_array( 'title=', $pieces, true ) ) {
 				$index                = array_search( 'title=', $pieces );
 				$pieces[ $index + 1 ] = '"' . $this->apply_title_format( $pieces[ $index + 1 ] ) . '" ';
 			}
