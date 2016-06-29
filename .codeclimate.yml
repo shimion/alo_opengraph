@@ -50,3 +50,4 @@ exclude_paths:
 - "inc/extlib/"
 - "readme.txt"
 - "README.md"
+- "inc/deprecated.php"

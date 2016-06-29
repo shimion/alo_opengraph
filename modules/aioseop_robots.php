@@ -195,6 +195,26 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 			return $submit;
 		}
 
+		/**
+		 * Returns the sitemap filename;
+		 * @return bool
+		 */
+		function get_sitemap_filename(){
+
+			global $aioseop_options;
+			if ( isset( $aioseop_options[ 'modules' ][ 'aiosp_sitemap_options' ][ 'aiosp_sitemap_filename' ] ) ){
+				return $aioseop_options[ 'modules' ][ 'aiosp_sitemap_options' ][ 'aiosp_sitemap_filename' ];
+			}
+			return FALSE;
+		}
+
+		/**
+		 * Filters the options.
+		 *
+		 * @todo Much of this couldn't be considered filtering options, and should be extracted to other functions.
+		 * @since ??
+		 * @since 2.3.6
+		 */
 		function filter_options( $options, $location ) {
 			if ( $location ) {
 				$prefix = $this->get_prefix( $location ) . $location . '_';
@@ -223,7 +243,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 				}
 				$access = ( get_option( 'blog_public' ) ) ? 'allow' : 'block';
 				if ( $access ) {
-					$allow_rule = "Sitemap: \n\n# global\nUser-agent: *\nDisallow: /xmlrpc.php\n\n";
+					global $aioseop_options;
+					$sitemap_url = '';
+					$sitemap_filename = $this->get_sitemap_filename();
+					if( $sitemap_filename ){
+						$sitemapurl = trailingslashit( get_home_url() ) . $sitemap_filename . '.xml';
+					}
+					$allow_rule = "Sitemap: $sitemapurl \n\n# global\nUser-agent: *\nDisallow: /xmlrpc.php\n\n";
 					$block_rule = "# global\nUser-agent: *\nDisallow: /\n\n";
 					if ( empty( $options[ $prefix . 'robotgen' ] ) ) {
 						$options[ $prefix . 'robotgen' ] = '';
