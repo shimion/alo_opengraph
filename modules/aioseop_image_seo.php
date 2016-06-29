@@ -30,7 +30,33 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			 * @access public
 			 * @var array $default_options
 			 */
-			$this->default_options = array(
+			$this->help_values();
+			$this->create_default_options();
+			$this->layout_locations();
+			// Load initial options / set defaults.
+			$this->update_options();
+			$display = array();
+			if ( isset( $this->options['aiosp_image_seo_types'] ) ) {
+				$display = $this->options['aiosp_image_seo_types'];
+			}
+			global $post;
+			$other_options = array();
+			foreach ( $this->layout as $k => $v ) {
+				$other_options = array_merge( $other_options, $v['options'] );
+			}
+			$this->layout['default']['options'] = array_diff( array_keys( $this->default_options ), $other_options );
+			$this->add_help_text_links();
+			parent::__construct();
+		}
+		/**
+		 * Set default values.
+		 *
+		 *
+		 * @since 1.0.0
+		 *
+		 */
+		public function create_default_options() {
+		$this->default_options = array(
 				'use_aiseo_image_tags' =>
 					array(
 						'name' => __( 'Use AIOSEO Image Title and Alt tag', 'all-in-one-seo-pack' ),
@@ -57,23 +83,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					'type' => 'checkbox',
 				),
 			);
-
-			$this->help_values();
-			$this->layout_locations();
-			// Load initial options / set defaults.
-			$this->update_options();
-			$display = array();
-			if ( isset( $this->options['aiosp_image_seo_types'] ) ) {
-				$display = $this->options['aiosp_image_seo_types'];
-			}
-			global $post;
-			$other_options = array();
-			foreach ( $this->layout as $k => $v ) {
-				$other_options = array_merge( $other_options, $v['options'] );
-			}
-			$this->layout['default']['options'] = array_diff( array_keys( $this->default_options ), $other_options );
-			$this->add_help_text_links();
-			parent::__construct();
 		}
 
 		/**
