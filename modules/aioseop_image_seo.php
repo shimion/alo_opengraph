@@ -11,7 +11,14 @@
 
 if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 
+	/**
+	 * Class All_in_One_SEO_Pack_Image_Seo
+	 */
 	class All_in_One_SEO_Pack_Image_Seo extends All_in_One_SEO_Pack_Module {
+
+		/**
+		 * All_in_One_SEO_Pack_Image_Seo constructor.
+		 */
 		function __construct() {
 			if ( 'All_in_One_SEO_Pack_Image_Seo' === get_class( $this ) ) {
 
@@ -135,6 +142,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			);
 		}
 
+		/**
+		 * @param $post
+		 *
+		 * @return array
+		 */
 		public function find_replacements( $post ) {
 			$categories           = wp_get_post_categories( $post->ID );
 			$category_title       = get_cat_name( $categories[0] );
@@ -153,11 +165,16 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			return $replacements;
 		}
 
+		/**
+		 * @param $str
+		 *
+		 * @return mixed
+		 */
 		public function strip_puncuation( $str ) {
 			$puncuation = array(
 				'&#039;',
 				"'",
-				"&quot;",
+				'&quot;',
 				'"',
 				'-',
 				':',
@@ -171,7 +188,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 				'{',
 			);
 			foreach ( $puncuation as $mark ) {
-				$str = str_replace( $mark, "", $str );
+				$str = str_replace( $mark, '', $str );
 			}
 
 			return $str;
@@ -185,6 +202,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param string $title Title being passed.
+		 *
+		 * @return mixed|string
 		 */
 		public function apply_title_format( $title ) {
 			global $post;
@@ -210,6 +229,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param string $alt Alt tag being passed.
+		 *
+		 * @return mixed|string
 		 */
 		public function apply_alt_format( $alt ) {
 			global $post;
@@ -220,6 +241,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 					$alt = str_replace( $key, $value, $alt );
 				}
 			}
+
 			if ( 'on' === $this->options['aiosp_image_seo_alt_strip_punc'] ) {
 				$alt = $this->strip_puncuation( $alt );
 			}
@@ -231,12 +253,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		/**
 		 * Edit image attributes.
 		 *
-		 * Insert AISEOP title into injected post image.
+		 * Insert AIOSEOP title into injected post image.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param array $attr Attributes for image contained in meta values.
 		 * @param object $attachment Attachment object.
+		 *
+		 * @return array
 		 */
 		public function edit_image_attributes( $attr, $attachment ) {
 			if ( 'on' === $this->options['aiosp_image_seo_use_aiseo_image_tags'] ) {
@@ -256,6 +280,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 *
 		 * @param string $html Markup returned for html tag.
 		 * @param int $id Attachment id.
+		 * @param $alt
+		 * @param $title
+		 *
+		 * @return mixed|string
+		 * @return mixed|string
 		 */
 		public function edit_image_tag( $html, $id, $alt, $title ) {
 			$post  = get_post( $id );
@@ -268,11 +297,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		/**
 		 * Add image tags to images in post content.
 		 *
-		 * Insert AISEOP values into images if they are set for embedded images.
+		 * Insert AIOSEOP values into images if they are set for embedded images.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param string $content Content of post.
+		 *
+		 * @return mixed
 		 */
 		public function aioseo_the_content( $content ) {
 			if ( 'on' === $this->options['aiosp_image_seo_use_aiseo_image_tags'] ) {
@@ -287,6 +318,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param array $matches Image tags returned for post using regex call.
+		 *
+		 * @return string
 		 */
 		public function replace_tags( $matches ) {
 			// Blow up image tags into components/attributes.
