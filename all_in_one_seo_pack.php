@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package All-in-One-SEO-Pack
  * @version 2.3.8
+ * 
+ * @since 0.6.2.6
  */
 
 if ( ! defined( 'AIOSEOPPRO' ) ) {
