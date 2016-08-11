@@ -210,7 +210,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$title = str_replace( '"', '', $title );
 			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
 			foreach ( $this->find_replacements( $post ) as $key => $value ) {
-				if ( strrpos( $title, $key ) != false ) {
+				if ( false !== strrpos( $title, $key ) ) {
 					$title = str_replace( $key, $value, $title );
 				}
 			}
@@ -237,7 +237,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			$alt = str_replace( '"', '', $alt );
 			$alt = str_replace( '%alt%', $alt, $this->options['aiosp_image_seo_alt_format'] );
 			foreach ( $this->find_replacements( $post ) as $key => $value ) {
-				if ( strrpos( $alt, $key ) != false ) {
+				if ( false !== strrpos( $alt, $key ) ) {
 					$alt = str_replace( $key, $value, $alt );
 				}
 			}
@@ -245,7 +245,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 			if ( 'on' === $this->options['aiosp_image_seo_alt_strip_punc'] ) {
 				$alt = $this->strip_puncuation( $alt );
 			}
-
 			return $alt;
 		}
 
