@@ -58,7 +58,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Bad_Robots' ) ) {
 				'blocked_log'    => array(
 					'name'     => __( 'Log Of Blocked Bots', 'all-in-one-seo-pack' ),
 					'default'  => __( 'No requests yet.', 'all-in-one-seo-pack' ),
-					'type'     => 'html',
+					'type'     => 'esc_html',
 					'disabled' => 'disabled',
 					'save'     => false,
 					'label'    => 'top',
@@ -98,17 +98,43 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Bad_Robots' ) ) {
 			if ( $this->option_isset( 'block_bots' ) ) {
 				if ( ! $this->allow_bot() ) {
 					status_header( 503 );
-					$ip         = $_SERVER['REMOTE_ADDR'];
+					$ip         = $this->validate_ip( $_SERVER['REMOTE_ADDR'] );
 					$user_agent = $_SERVER['HTTP_USER_AGENT'];
 					$this->blocked_message( sprintf( __( 'Blocked bot with IP %s -- matched user agent %s found in blocklist.', 'all-in-one-seo-pack' ), $ip, $user_agent ) );
 					exit();
 				} elseif ( $this->option_isset( 'block_refer' ) && $this->is_bad_referer() ) {
 					status_header( 503 );
-					$ip      = $_SERVER['REMOTE_ADDR'];
+					$ip      = $this->validate_ip( $_SERVER['REMOTE_ADDR'] );
 					$referer = $_SERVER['HTTP_REFERER'];
 					$this->blocked_message( sprintf( __( 'Blocked bot with IP %s -- matched referer %s found in blocklist.', 'all-in-one-seo-pack' ), $ip, $referer ) );
 				}
 			}
+		}
+
+		/**
+		 * Validate IP.
+		 *
+		 * @param $ip
+		 *
+		 * @since 2.3.7
+		 *
+		 * @return string
+		 */
+		function validate_ip( $ip ) {
+
+			if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) {
+				// Valid IPV4.
+				return $ip;
+			}
+
+			if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
+				// Valid IPV6.
+				return $ip;
+			}
+
+			// Doesn't seem to be a valid IP.
+			return 'invalid IP submitted';
+
 		}
 
 		function generate_htaccess_blocklist() {
@@ -217,7 +243,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Bad_Robots' ) ) {
 		function filter_display_options( $options ) {
 
 			if ( $this->option_isset( 'blocked_log' ) ) {
-				$options["{$this->prefix}blocked_log"] = '<pre>' . $options["{$this->prefix}blocked_log"] . '</pre>';
+				if ( preg_match( '/\<(\?php|script)/', $options["{$this->prefix}blocked_log"] ) ) {
+					$options["{$this->prefix}blocked_log"] = "Probable XSS attempt detected!\n" . $options["{$this->prefix}blocked_log"];
+				}
 			}
 
 			return $options;

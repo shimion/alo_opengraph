@@ -101,7 +101,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_File_Editor' ) ) {
 					'class' => 'button-primary',
 					'value' => __( 'Update robots.txt', 'all-in-one-seo-pack' ) . ' &raquo;',
 				);
-			} elseif ( 'htaccess' === $this->current_tab  ) {
+			} elseif ( 'htaccess' === $this->current_tab ) {
 				$submit['Submit_htaccess'] = array(
 					'type'  => 'submit',
 					'class' => 'button-primary',

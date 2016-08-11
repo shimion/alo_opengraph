@@ -99,7 +99,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 
 		function update_options_filter( $options, $location ) {
 			if ( $location == null && isset( $options[ $this->prefix . 'force_rewrites' ] ) ) {
-					unset( $options[ $this->prefix . 'force_rewrites' ] );
+				unset( $options[ $this->prefix . 'force_rewrites' ] );
 			}
 
 			return $options;
@@ -120,14 +120,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 
 		function settings_update_action( $options, $location ) {
 			if ( $location == null && isset( $_POST[ $this->prefix . 'force_rewrites' ] ) ) {
-					$force_rewrites = $_POST[ $this->prefix . 'force_rewrites' ];
-					if ( ( $force_rewrites == 0 ) || ( $force_rewrites == 1 ) ) {
-						global $aiosp;
-						$opts                         = $aiosp->get_current_options( array(), null );
-						$opts['aiosp_force_rewrites'] = $force_rewrites;
-						$aiosp->update_class_option( $opts );
-						wp_cache_flush();
-					}
+				$force_rewrites = $_POST[ $this->prefix . 'force_rewrites' ];
+				if ( ( $force_rewrites == 0 ) || ( $force_rewrites == 1 ) ) {
+					global $aiosp;
+					$opts                         = $aiosp->get_current_options( array(), null );
+					$opts['aiosp_force_rewrites'] = $force_rewrites;
+					$aiosp->update_class_option( $opts );
+					wp_cache_flush();
+				}
 			}
 		}
 
