@@ -147,19 +147,28 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 *
 		 * @return array
 		 */
-		public function find_replacements( $post ) {
+		public function find_replacements( $post, $image_id ) {
 			$categories           = wp_get_post_categories( $post->ID );
 			$category_title       = get_cat_name( $categories[0] );
 			$post_type            = get_post_type( $post->ID );
 			$post_seo_title       = get_post_meta( $post->ID, '_aioseop_title', true );
+			$image_post = get_post( $image_id );
+			$image_post_title =  $image_post->post_title;
 			$post_seo_description = get_post_meta( $post->ID, '_aioseop_description', true );
+			$image_seo_title = get_post_meta( $image_id, '_aioseop_title', true );
+			$image_seo_description = get_post_meta( $image_id, '_aioseop_description', true );
+
 			$replacements         = array(
+				'%image_seo_description%' => $image_seo_description,
+				'%image_seo_title%'      => $image_seo_title,
 				'%blog_title%'           => get_bloginfo( 'name' ),
 				'%post_title%'           => $post->post_title,
 				'%category_title%'       => $category_title,
 				'%post_type%'            => $post_type,
 				'%post_seo_title%'       => $post_seo_title,
 				'%post_seo_description%' => $post_seo_description,
+				'%image_title%'          => $image_post_title,
+				'%image_name%'           => $image_post_title,
 			);
 
 			return $replacements;
@@ -205,17 +214,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 *
 		 * @return mixed|string
 		 */
-		public function apply_title_format( $title ) {
+		public function apply_title_format( $title, $image_id ) {
 			global $post;
 			$title = str_replace( '"', '', $title );
 			$title = str_replace( '%image_title%', $title, $this->options['aiosp_image_seo_title_format'] );
-			foreach ( $this->find_replacements( $post ) as $key => $value ) {
+			foreach ( $this->find_replacements( $post, $image_id ) as $key => $value ) {
 				if ( false !== strrpos( $title, $key ) ) {
 					$title = str_replace( $key, $value, $title );
 				}
-			}
-			if ( 'on' === $this->options['aiosp_image_seo_title_strip_punc'] ) {
-				$title = $this->strip_puncuation( $title );
 			}
 
 			return $title;
@@ -232,11 +238,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 *
 		 * @return mixed|string
 		 */
-		public function apply_alt_format( $alt ) {
+		public function apply_alt_format( $alt, $image_id ) {
 			global $post;
 			$alt = str_replace( '"', '', $alt );
 			$alt = str_replace( '%alt%', $alt, $this->options['aiosp_image_seo_alt_format'] );
-			foreach ( $this->find_replacements( $post ) as $key => $value ) {
+			foreach ( $this->find_replacements( $post, $image_id ) as $key => $value ) {
 				if ( false !== strrpos( $alt, $key ) ) {
 					$alt = str_replace( $key, $value, $alt );
 				}
@@ -263,8 +269,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		 */
 		public function edit_image_attributes( $attr, $attachment ) {
 			if ( 'on' === $this->options['aiosp_image_seo_use_aiseo_image_tags'] ) {
-				$attr['alt']   = $this->apply_alt_format( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
-				$attr['title'] = $this->apply_title_format( $attachment->post_title );
+				$attr['alt']   = $this->apply_alt_format( get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) , $attachment->ID );
+				$attr['title'] = $this->apply_title_format( $attachment->post_title, $attachment->ID  );
 			}
 
 			return $attr;
@@ -323,13 +329,19 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Image_Seo' ) ) {
 		public function replace_tags( $matches ) {
 			// Blow up image tags into components/attributes.
 			$pieces = preg_split( '/(\w+=)/', $matches[0], - 1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+			if ( in_array( 'class=', $pieces, true ) ) {
+				$index = array_search( 'class=', $pieces );
+				$image_class= substr($pieces[ $index + 1 ], 23, -1);
+				$image_id = intval(substr($image_class, 9, 2));
+			}
+
 			if ( in_array( 'alt=', $pieces, true ) ) {
 				$index                = array_search( 'alt=', $pieces );
-				$pieces[ $index + 1 ] = '"' . $this->apply_alt_format( $pieces[ $index + 1 ] ) . '" ';
+				$pieces[ $index + 1 ] = '"' . $this->apply_alt_format( $pieces[ $index + 1 ] , $image_id ) . '" ';
 			}
 			if ( in_array( 'title=', $pieces, true ) ) {
 				$index                = array_search( 'title=', $pieces );
-				$pieces[ $index + 1 ] = '"' . $this->apply_title_format( $pieces[ $index + 1 ] ) . '" ';
+				$pieces[ $index + 1 ] = '"' . $this->apply_title_format( $pieces[ $index + 1 ] , $image_id ) . '" ';
 			}
 
 			return implode( '', $pieces ) . ' /';
