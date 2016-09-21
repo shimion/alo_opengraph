@@ -1,9 +1,14 @@
 <?php
 /**
+ * @since 2.0.0.0
+ * 
  * @package All-in-One-SEO-Pack
  */
+ 
 /**
  * The module base class; handles settings, options, menus, metaboxes, etc.
+ * 
+ * @since 2.0.0.0
  */
 if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 	abstract class All_in_One_SEO_Pack_Module {
@@ -35,6 +40,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Handles calls to display_settings_page_{$location}, does error checking.
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function __call( $name, $arguments ) {
 			if ( $this->strpos( $name, 'display_settings_page_' ) === 0 ) {
@@ -47,6 +54,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			throw new Exception( $error );
 		}
 
+		/**
+		 * @since 2.0.0.0
+		 */
 		function __construct() {
 			if ( empty( $this->file ) ) {
 				$this->file = __FILE__;
@@ -63,6 +73,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Get options for module, stored individually or together.
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function get_class_option() {
 			$option_name = $this->get_option_name();
