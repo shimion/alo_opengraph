@@ -1,12 +1,16 @@
 <?php
 
 /**
+ * @since 2.3.3.0
+ * 
  * @package All-in-One-SEO-Pack
  */
 class aiosp_metaboxes {
 
 	/**
-	 * aiosp_metaboxes constructor.
+	 * aiosp_metaboxes constructor
+	 * 
+	 * @since 2.3.3.0
 	 */
 	function __construct() {
 		//construct
@@ -15,6 +19,8 @@ class aiosp_metaboxes {
 
 
 	/**
+	 * @since 2.3.3.0
+	 * 
 	 * @param $add
 	 * @param $meta
 	 */
