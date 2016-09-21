@@ -92,6 +92,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Update options for module, stored individually or together.
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function update_class_option( $option_data, $option_name = false ) {
 			if ( $option_name == false ) {
@@ -112,6 +114,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Delete options for module, stored individually or together.
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function delete_class_option( $delete = false ) {
 			$option_name = $this->get_option_name();
@@ -131,6 +135,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Get the option name with prefix.
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function get_option_name() {
 			if ( ! isset( $this->option_name ) || empty( $this->option_name ) ) {
@@ -142,6 +148,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Convenience function to see if an option is set.
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function option_isset( $option, $location = null ) {
 			$prefix = $this->get_prefix( $location );
@@ -151,6 +159,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		}
 
 		/*** Case conversion; handle non UTF-8 encodings and fallback ***/
+		
+		/**
+		 * @since 2.0.0.0
+		 */
 
 		function convert_case( $str, $mode = 'upper' ) {
 			static $charset = null;
@@ -201,6 +213,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		/**
 		 * Convert a string to lower case
 		 * Compatible with mb_strtolower(), an UTF-8 friendly replacement for strtolower()
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function strtolower( $str ) {
 			return $this->convert_case( $str, 'lower' );
@@ -209,6 +223,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		/**
 		 * Convert a string to upper case
 		 * Compatible with mb_strtoupper(), an UTF-8 friendly replacement for strtoupper()
+		 * 
+		 * @ since 2.0.0.0
 		 */
 		function strtoupper( $str ) {
 			return $this->convert_case( $str, 'upper' );
@@ -217,6 +233,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		/**
 		 * Convert a string to title case
 		 * Compatible with mb_convert_case(), an UTF-8 friendly replacement for ucwords()
+		 * 
+		 * @since 2.0.0.0
 		 */
 		function ucwords( $str ) {
 			return $this->convert_case( $str, 'title' );
@@ -224,6 +242,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Wrapper for strlen() - uses mb_strlen() if possible.
+		 * 
+		 * @since 2.0.3.0
 		 */
 		function strlen( $string ) {
 			if ( function_exists( 'mb_strlen' ) ) {
@@ -235,6 +255,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Wrapper for substr() - uses mb_substr() if possible.
+		 * 
+		 * @since 2.0.3.0
 		 */
 		function substr( $string, $start = 0, $length = 2147483647 ) {
 			$args = func_get_args();
@@ -247,6 +269,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Wrapper for strpos() - uses mb_strpos() if possible.
+		 * 
+		 * @since 2.0.3.0
 		 */
 		function strpos( $haystack, $needle, $offset = 0 ) {
 			if ( function_exists( 'mb_strpos' ) ) {
@@ -258,6 +282,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Wrapper for strrpos() - uses mb_strrpos() if possible.
+		 * 
+		 * @since 2.0.3.0
 		 */
 		function strrpos( $haystack, $needle, $offset = 0 ) {
 			if ( function_exists( 'mb_strrpos' ) ) {
@@ -269,6 +295,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * convert xml string to php array - useful to get a serializable value
+		 * 
+		 * @since 2.1.0.0
 		 *
 		 * @param string $xmlstr
 		 *
@@ -287,7 +315,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				return $this->domnode_to_array( $doc->documentElement );
 			}
 		}
-
+		
+		/**
+		 * @since 2.0.0.0
+		 */
 		function xml_string_to_array( $xmlstr ) {
 			if ( ! class_exists( 'DOMDocument' ) ) {
 				return array();
@@ -299,6 +330,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
+		/**
+		 * @since 2.0.0.0
+		 */
 		function domnode_to_array( $node ) {
 			switch ( $node->nodeType ) {
 				case XML_CDATA_SECTION_NODE:
