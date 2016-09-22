@@ -971,7 +971,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $data;
 		}
 
-		/***
+		/**
 		 * Helper function to convert csv in key/value pair format to an associative array.
 		 * 
 		 * @since 2.0
