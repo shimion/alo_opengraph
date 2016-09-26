@@ -1046,6 +1046,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * See if a file exists using WP Filesystem.
+		 * 
+		 * @since 2.0
 		 */
 		function file_exists( $filename ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1058,6 +1060,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * See if the directory entry is a file using WP Filesystem.
+		 *
+		 * @since 2.0
 		 */
 		function is_file( $filename ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1070,6 +1074,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * List files in a directory using WP Filesystem.
+		 *
+		 * @since 2.0
 		 */
 		function scandir( $path ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1087,6 +1093,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Load a file through WP Filesystem; implement basic support for offset and maxlen.
+		 *
+		 * @since 2.0
 		 */
 		function load_file( $filename, $use_include_path = false, $context = null, $offset = - 1, $maxlen = - 1 ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1120,6 +1128,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Save a file through WP Filesystem.
+		 *
+		 * @since 2.0
 		 */
 		function save_file( $filename, $contents ) {
 			$failed_str   = __( sprintf( "Failed to write file %s!\n", $filename ), 'all-in-one-seo-pack' );
@@ -1143,6 +1153,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Delete a file through WP Filesystem.
+		 *
+		 * @since 2.0
 		 */
 		function delete_file( $filename ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1163,6 +1175,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Rename a file through WP Filesystem.
+		 *
+		 * @since 2.0
 		 */
 		function rename_file( $filename, $newname ) {
 			$wpfs = $this->get_filesystem_object();
@@ -1189,6 +1203,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Load multiple files.
+		 *
+		 * @since 2.0
 		 */
 		function load_files( $options, $opts, $prefix ) {
 			foreach ( $opts as $opt => $file ) {
@@ -1205,6 +1221,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Save multiple files.
+		 *
+		 * @since 2.0
 		 */
 		function save_files( $opts, $prefix ) {
 			foreach ( $opts as $opt => $file ) {
@@ -1219,6 +1237,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Delete multiple files.
+		 *
+		 * @since 2.0
 		 */
 		function delete_files( $opts ) {
 			foreach ( $opts as $opt => $file ) {
@@ -1226,7 +1246,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				$this->delete_file( $file );
 			}
 		}
-
+		
+		/**
+		 * @since 2.2
+		 */
 		function get_all_images_by_type( $options = null, $p = null ) {
 			$img = array();
 			if ( empty( $img ) ) {
@@ -1330,6 +1353,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $img;
 		}
 
+		/**
+		 * @since 2.2
+		 */
 		function get_all_images( $options = null, $p = null ) {
 			$img    = $this->get_all_images_by_type( $options, $p );
 			$legacy = array();
@@ -1344,8 +1370,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $legacy;
 		}
 
-		/*** Thanks to Justin Tadlock for the original get-the-image code - http://themehybrid.com/plugins/get-the-image ***/
-
+		/** 
+		 * Thanks to Justin Tadlock for the original get-the-image code - http://themehybrid.com/plugins/get-the-image
+		 *
+		 * @since 2.2
+		 */
 		function get_the_image( $options = null, $p = null ) {
 
 			if ( $p === null ) {
@@ -1382,10 +1411,16 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $image;
 		}
 
+		/**
+		 * @since 2.2
+		 */
 		function get_the_image_by_default( $p = null ) {
 			return '';
 		}
 
+		/**
+		 * @since 2.2
+		 */
 		function get_the_image_by_meta_key( $args = array() ) {
 
 			/* If $meta_key is not an array. */
@@ -1406,6 +1441,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return false;
 		}
 
+		/**
+		 * @since 2.2
+		 */
 		function get_the_image_by_post_thumbnail( $p = null ) {
 
 			if ( $p === null ) {
@@ -1429,6 +1467,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $image[0];
 		}
 
+		/**
+		 * @since 2.2
+		 */
 		function get_the_image_by_attachment( $p = null ) {
 
 			if ( $p === null ) {
@@ -1473,6 +1514,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		}
 
+		/**
+		 * @since 2.2
+		 */
 		function get_the_image_by_scan( $p = null ) {
 
 			if ( $p === null ) {
