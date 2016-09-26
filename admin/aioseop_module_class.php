@@ -1536,11 +1536,18 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return false;
 		}
 
-		/** crude approximization of whether current user is an admin */
+		/** 
+		 * crude approximization of whether current user is an admin
+		 *
+		 * @since 2.0
+		 */
 		function is_admin() {
 			return current_user_can( 'level_8' );
 		}
 
+		/**
+		* @since 2.2.4
+		*/
 		function help_text_helper( &$default_options, $options, $help_link = '' ) {
 			foreach ( $options as $o ) {
 				$ht = '';
@@ -1572,6 +1579,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
+		/**
+		* @since 2.2.4
+		*/
 		function add_help_text_links() {
 			if ( ! empty( $this->help_text ) ) {
 				foreach ( $this->layout as $k => $v ) {
@@ -1590,8 +1600,10 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		/**
 		 * Load scripts and styles for metaboxes.
 		 *
-		 * edit-tags exists only for pre 4.5 support... remove when we drop 4.5 support.
+		 * Edit-tags exists only for pre 4.5 support... remove when we drop 4.5 support.
 		 * Also, that check and others should be pulled out into their own functions
+		 *
+		 * @since 2.0
 		 */
 		function enqueue_metabox_scripts() {
 			$screen = '';
@@ -1634,6 +1646,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Load styles for module.
+		 *
+		 * @since 2.0
 		 */
 		function enqueue_styles() {
 			wp_enqueue_style( 'thickbox' );
@@ -1648,6 +1662,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Load scripts for module, can pass data to module script.
+		 *
+		 * @since 2.0
 		 */
 		function enqueue_scripts() {
 			wp_enqueue_script( 'sack' );
@@ -1666,6 +1682,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
+		/**
+		* @since 2.2
+		*/
 		function localize_script_data( $data ) {
 			if ( ! is_array( $data ) ) {
 				$data = array( 0 => $data );
@@ -1693,6 +1712,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Override this to run code at the beginning of the settings page.
+		 *
+		 * @since
 		 */
 		function settings_page_init() {
 
@@ -1700,6 +1721,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Filter out admin pointers that have already been clicked.
+		 *
+		 * @since 2.0
 		 */
 		function filter_pointers() {
 			if ( ! empty( $this->pointers ) ) {
@@ -1714,6 +1737,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Add basic hooks when on the module's page.
+		 *
+		 * @since 2.0
 		 */
 		function add_page_hooks() {
 			$hookname = current_filter();
@@ -1726,6 +1751,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			add_action( $this->prefix . 'settings_header', array( $this, 'display_tabs' ) );
 		}
 
+		/**
+		* @since 2.0.3
+		*/
 		function get_admin_links() {
 			if ( ! empty( $this->menu_name ) ) {
 				$name = $this->menu_name;
@@ -1784,6 +1812,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $links;
 		}
 
+		/**
+		* @since 2.0
+		*/
 		function add_admin_bar_submenu() {
 			global $aioseop_admin_menu, $wp_admin_bar;
 
@@ -1799,12 +1830,18 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Collect metabox data together for tabbed metaboxes.
+		 *
+		 * @since 2.0
 		 */
 		function filter_return_metaboxes( $args ) {
 			return array_merge( $args, $this->post_metaboxes );
 		}
 
-		/** Add submenu for module, call page hooks, set up metaboxes. */
+		/** 
+		 * Add submenu for module, call page hooks, set up metaboxes.
+		 * 
+		 * @since 2.0
+		 */
 		function add_menu( $parent_slug ) {
 			if ( ! empty( $this->menu_name ) ) {
 				$name = $this->menu_name;
@@ -1897,6 +1934,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Update postmeta for metabox.
+		 *
+		 * @since 2.0
 		 */
 		function save_post_data( $post_id ) {
 			static $update = false;
@@ -1928,6 +1967,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Outputs radio buttons, checkboxes, selects, multiselects, handles groups.
+		 *
+		 * @since 2.0
 		 */
 		function do_multi_input( $args ) {
 			extract( $args );
@@ -1994,6 +2035,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Outputs a setting item for settings pages and metaboxes.
+		 *
+		 * @since 2.0
 		 */
 		function get_option_html( $args ) {
 			static $n = 0;
@@ -2091,6 +2134,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Format a row for an option on a settings page.
+		 *
+		 * @since 2.0
 		 */
 		function get_option_row( $name, $opts, $args ) {
 			$label_text = $input_attr = $help_text_2 = $id_attr = '';
@@ -2123,6 +2168,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Display options for settings pages and metaboxes, allows for filtering settings, custom display options.
+		 *
+		 * @since 2.0
 		 */
 		function display_options( $location = null, $meta_args = null ) {
 			static $location_settings = array();
@@ -2222,6 +2269,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			}
 		}
 
+		/**
+		* @since 2.2.4
+		*/
 		function sanitize_domain( $domain ) {
 			$domain = trim( $domain );
 			$domain = $this->strtolower( $domain );
@@ -2235,7 +2285,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $domain;
 		}
 
-		/** Sanitize options */
+		/** 
+		 * Sanitize options
+		 *
+		 * @since 2.0
+		 */
 		function sanitize_options( $location = null ) {
 			foreach ( $this->setting_options( $location ) as $k => $v ) {
 				if ( isset( $this->options[ $k ] ) ) {
@@ -2272,6 +2326,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Display metaboxes with display_options()
+		 *
+		 * @since 2.0
 		 */
 		function display_metabox( $post, $metabox ) {
 			$this->display_options( $metabox['args']['location'], $metabox );
@@ -2279,6 +2335,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Handle resetting options to defaults.
+		 *
+		 * @since 2.0
 		 */
 		function reset_options( $location = null, $delete = false ) {
 			if ( $delete === true ) {
@@ -2292,7 +2350,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$this->update_class_option( $this->options );
 		}
 
-		/** handle option resetting and updating */
+		/**
+		 * handle option resetting and updating
+		 *
+		 * @since 2.0
+		 */
 		function handle_settings_updates( $location = null ) {
 			$message = '';
 			if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'aiosp_update_module' &&
@@ -2332,7 +2394,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $message;
 		}
 
-		/** Update / reset settings, printing options, sanitizing, posting back */
+		/** 
+		 * Update / reset settings, printing options, sanitizing, posting back
+		 *
+		 * @since 2.0
+		 */
 		function display_settings_page( $location = null ) {
 			if ( $location != null ) {
 				$location_info = $this->locations[ $location ];
@@ -2457,6 +2523,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 		/**
 		 * Get the prefix used for a given location.
+		 *
+		 * @since 2.0
 		 */
 		function get_prefix( $location = null ) {
 			if ( ( $location != null ) && isset( $this->locations[ $location ]['prefix'] ) ) {
@@ -2466,7 +2534,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $this->prefix;
 		}
 
-		/** Sets up initial settings */
+		/** 
+		 * Sets up initial settings
+		 *
+		 * @since 2.0
+		 */
 		function setting_options( $location = null, $defaults = null ) {
 			if ( $defaults === null ) {
 				$defaults = $this->default_options;
@@ -2569,7 +2641,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $opts;
 		}
 
-		/** Generates just the default option names and values */
+		/** 
+		 * Generates just the default option names and values
+		 * 
+		 * @since 2.0
+		 */
 		function default_options( $location = null, $defaults = null ) {
 			$options = $this->setting_options( $location, $defaults );
 			$opts    = array();
@@ -2582,7 +2658,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $opts;
 		}
 
-		/** Gets the current options stored for a given location. */
+		/** 
+		 * Gets the current options stored for a given location.
+		 *
+		 * @since 2.0
+		 */
 		function get_current_options( $opts = array(), $location = null, $defaults = null, $post = null ) {
 			$prefix   = $this->get_prefix( $location );
 			$get_opts = '';
@@ -2619,7 +2699,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			return $opts;
 		}
 
-		/** Updates the options array in the module; loads saved settings with get_option() or uses defaults */
+		/** 
+		 * Updates the options array in the module; loads saved settings with get_option() or uses defaults
+		 * 
+		 * @since 2.0
+		 */
 		function update_options( $opts = array(), $location = null, $defaults = null ) {
 			if ( $location === null ) {
 				$type = 'settings';
