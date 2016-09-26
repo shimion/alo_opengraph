@@ -4,14 +4,17 @@
  *
  * Mostly we're activating and deactivating modules/features.
  *
- * @package All-in-One-SEO-Pack
  * @since 2.0
+ *
+ * @package All-in-One-SEO-Pack
  */
 
 if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 
 	/**
 	 * Class All_in_One_SEO_Pack_Module_Manager
+	 *
+	 * @since 2.0
 	 */
 	class All_in_One_SEO_Pack_Module_Manager {
 		protected $modules = array();
@@ -24,6 +27,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 		 * All_in_One_SEO_Pack_Module_Manager constructor.
 		 *
 		 * Initialize module list.
+		 *
+		 * @since 2.2.7
 		 *
 		 * @param $mod Modules.
 		 */
@@ -59,6 +64,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 		/**
 		 * Return module.
 		 *
+		 * @since 2.0
+		 *
 		 * @param $class
 		 *
 		 * @return $this|bool|mixed
@@ -81,6 +88,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 		}
 
 		/**
+		 * @since 2.0
+		 *
 		 * @return array
 		 */
 		function get_loaded_module_list() {
@@ -97,6 +106,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 		}
 
 		/**
+		 * @since 2.0
+		 *
 		 * @param $mod Module.
 		 * @param null $args
 		 *
@@ -139,6 +150,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 		}
 
 		/**
+		 * @since 2.0
+		 *
 		 * @param $mod
 		 *
 		 * @return bool
@@ -197,6 +210,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 			return false;
 		}
 
+		/**
+		 * @since 2.0
+		 */
 		function load_modules() {
 			if ( is_array( $this->modules ) ) {
 				foreach ( $this->modules as $k => $v ) {
