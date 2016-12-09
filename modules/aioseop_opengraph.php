@@ -865,7 +865,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 
 			foreach ( $attributes as $attr ) {
 				if ( strpos( $output, $attr ) === false ) {
-					$output .= "\n\t$attr ";
+					$output .= "nt$attr ";
 				}
 			}
 
@@ -897,6 +897,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 
 			$setmeta      = $this->options['aiosp_opengraph_setmeta'];
 			$social_links = '';
+			//Shimion: Font page
 			if ( is_front_page() ) {
 				$title = $this->options['aiosp_opengraph_hometitle'];
 				if ( $first_page ) {
@@ -925,7 +926,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 				}
 
 				if ( empty( $description ) && $first_page && ( ! empty( $this->options['aiosp_opengraph_generate_descriptions'] ) ) && ! empty( $post ) && ! empty( $post->post_content ) && ! post_password_required( $post ) ) {
-					$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( preg_replace( '/\s+/', ' ', $post->post_content ) ), 1000 );
+					$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( preg_replace( '/s+/', ' ', $post->post_content ) ), 1000 );
 				}
 
 				if ( empty( $description ) && $first_page ) {
@@ -972,11 +973,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 					}
 
 					if ( isset( $post->post_date ) ) {
-						$published_time = date( 'Y-m-d\TH:i:s\Z', mysql2date( 'U', $post->post_date ) );
+						$published_time = date( 'Y-m-dTH:i:sZ', mysql2date( 'U', $post->post_date ) );
 					}
 
 					if ( isset( $post->post_modified ) ) {
-						$modified_time = date( 'Y-m-d\TH:i:s\Z', mysql2date( 'U', $post->post_modified ) );
+						$modified_time = date( 'Y-m-dTH:i:sZ', mysql2date( 'U', $post->post_modified ) );
 					}
 				}
 
@@ -1004,6 +1005,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 				if ( empty( $type ) ) {
 					$type = 'article';
 				}
+			
+			
+			} elseif ( is_category() && is_archive()){
+				$thumbnail = $this->get_the_image_by_scan();
+			
 			} else {
 				return;
 			}
@@ -1038,7 +1044,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 			}
 
 			if ( ! empty( $description ) ) {
-				$description = $aiosp->internationalize( preg_replace( '/\s+/', ' ', $description ) );
+				$description = $aiosp->internationalize( preg_replace( '/s+/', ' ', $description ) );
 				if ( ! empty( $this->options['aiosp_opengraph_description_shortcodes'] ) ) {
 					$description = do_shortcode( $description );
 				}
@@ -1061,6 +1067,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 			// if( empty($thumbnail) ) $thumbnail = $this->get_the_image();
 
 			/* Add user supplied default image */
+			// Shimion
 			if ( empty( $thumbnail ) ) {
 				if ( empty( $this->options['aiosp_opengraph_defimg'] ) ) {
 					$thumbnail = $this->options['aiosp_opengraph_dimg'];
@@ -1097,9 +1104,33 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 				}
 			}
 
+			if (  empty( $thumbnail ) ) {
+				$thumbnail = $this->get_the_image_by_post_thumbnail();
+			}
+
+
+			if (  empty( $thumbnail ) ) {
+				$thumbnail = $this->get_the_image_by_attachment();
+			}
+
+			if (  empty( $thumbnail ) ) {
+				$thumbnail = $this->get_the_image_by_scan();
+			}
+
+
+
+
 			if ( ( empty( $thumbnail ) && ! empty( $this->options['aiosp_opengraph_fallback'] ) ) ) {
 				$thumbnail = $this->options['aiosp_opengraph_dimg'];
 			}
+			
+			
+				if(!empty($thumbnail)){
+				$thumbnail =	aq_resize( $thumbnail, 250, 250, true,true,true );
+				}
+				
+				
+			
 
 			if ( ! empty( $thumbnail ) ) {
 				$thumbnail = esc_url( $thumbnail );
@@ -1120,6 +1151,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 				if ( empty( $height ) && ! empty( $this->options['aiosp_opengraph_dimgheight'] ) ) {
 					$height = $this->options['aiosp_opengraph_dimgheight'];
 				}
+				
+				if($width <= 200 or $height <= 200){
+					$height = 250;
+					$width = 250;
+					}
+				
 			}
 
 			if ( ! empty( $video ) ) {
@@ -1266,7 +1303,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 			$social_link_schema = '';
 			if ( ! empty( $social_links ) ) {
 				$home_url     = esc_url( get_home_url() );
-				$social_links = explode( "\n", $social_links );
+				$social_links = explode( "n", $social_links );
 				foreach ( $social_links as $k => $v ) {
 					$v = trim( $v );
 					if ( empty( $v ) ) {
@@ -1339,7 +1376,7 @@ END;
 					'style'           => '',
 					'initial_options' => $this->fb_object_types,
 					'default'         => 'article',
-					'condshow'        => Array( 'aiosp_opengraph_types\[\]' => $slug ),
+					'condshow'        => Array( 'aiosp_opengraph_types[]' => $slug ),
 				);
 				$this->help_text[ $field ]                 = __( 'Choose a default value that best describes the content of your post type.', 'all-in-one-seo-pack' );
 				$this->help_anchors[ $field ]              = '#content-object-types';
